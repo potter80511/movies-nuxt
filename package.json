@@ -1,0 +1,31 @@
+{
+  "name": "nuxt-ex",
+  "version": "1.0.0",
+  "description": "nuxt exersize",
+  "author": "簡豪江",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/vue-fontawesome": "^0.1.9",
+    "bootstrap": "^4.1.3",
+    "bootstrap-vue": "^2.0.0",
+    "core-js": "^2.6.5",
+    "firebase": "^7.6.0",
+    "nuxt": "^2.6.3",
+    "nuxt-fontawesome": "^0.4.0",
+    "vue-awesome-swiper": "^3.1.3"
+  },
+  "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^5.12.0",
+    "@fortawesome/free-regular-svg-icons": "^5.12.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0"
+  }
+}
