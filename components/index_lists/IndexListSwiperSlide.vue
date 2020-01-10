@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <nuxt-link :to="{ name: 'film details', params: {id: imdbId}}">
+      <nuxt-link :to="{ name: 'film_details-id', params: {id: imdbId}}">
         <img :src="wallpaper">
       </nuxt-link>
     </div>
