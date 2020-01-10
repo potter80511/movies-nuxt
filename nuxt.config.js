@@ -72,5 +72,11 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+  router: {
+    extendRoutes (routes) {
+      routes.push({name: 'movies', path: '/movies', component: '~/pages/Films.vue'})
+      routes.push({name: 'series', path: '/series', component: '~/pages/Films.vue'})
+    }
   }
 }
