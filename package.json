@@ -10,7 +10,8 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "build:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt build",
-    "generate:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt generate"
+    "generate:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt generate",
+    "heroku-postbuild": "yarn build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
