@@ -165,7 +165,7 @@
   import { rateTenStar } from '~/plugins/helper';
   import { objToArray } from '~/plugins/helper';
   import BannerSlide from '~/components/BannerSlide';
-  import RelatedFilmsSwiper from '~/components/related_film_swiper/RelatedFilmsSwiper';
+  import RelatedFilmsSwiper from '~/components/relatedFilmSwiper/RelatedFilmsSwiper';
 
   export default {
     components: {

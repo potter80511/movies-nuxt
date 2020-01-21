@@ -25,11 +25,9 @@
             v-for="(item, i) in filmsData"
             :key="i"
             >
-            <nuxt-link :to="{ name: 'film_details-id', params: {id: item.imdb_id}}">
+            <nuxt-link :to="{ name: 'filmDetails-id', params: {id: item.imdb_id}}">
               <div class="image">
-                <nuxt-link :to="{ name: 'film_details-id', params: {id: item.imdb_id}}">
-                  <img :src="item.wallpaper" />
-                </nuxt-link>
+                <img :src="item.wallpaper" />
               </div>
               <div class="film_content">
                 <div style="display: none;">{{item.id}}</div>

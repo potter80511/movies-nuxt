@@ -1,20 +1,22 @@
 <template>
-  <swiper
-    :options="relatedSwiperOpitons"
+  <div
+    v-swiper:relatedSwiper="relatedSwiperOpitons"
     v-if="relatedData.length > 0"
   >
-    <swiper-slide
-      v-for="(related, i) in relatedData"
-      :key="i"
-      class="item">
-      <img :src="related.wallpaper" />
-      <a :href="'/film_details/' + related.imdb_id">
-        <span>{{related.tw_name}}</span>
-      </a>
-    </swiper-slide>
+    <div class="swiper-wrapper">
+      <div class="swiper-slide item"
+        v-for="(related, i) in relatedData"
+        :key="i"
+      >
+        <img :src="related.wallpaper" />
+        <a :href="'/filmDetails/' + related.imdb_id">
+          <span>{{related.tw_name}}</span>
+        </a>
+      </div>
+    </div>
     <div class="swiper-button-prev swiper-button" slot="button-prev"></div>
     <div class="swiper-button-next swiper-button" slot="button-next"></div>
-  </swiper>
+  </div>
 </template>
 
 <script>
