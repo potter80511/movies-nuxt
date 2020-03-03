@@ -7,6 +7,7 @@ const createStore = () => {
       movies: [],
       series: [],
       currentFilm: null,
+      allFilmsKeys: [],
     },
     mutations: { //更改狀態
       setLoadedMovies(state, payload) {
@@ -17,6 +18,9 @@ const createStore = () => {
       },
       setCurrentFilm(state, payload) {
         state.currentFilm = payload
+      },
+      setAllFilmsKeys(state, payload) {
+        state.allFilmsKeys = payload
       },
     },
     actions: {
@@ -92,6 +96,20 @@ const createStore = () => {
             commit('setCurrentFilm', film_data)
           })
       },
+      loadedAllFilmsKeys({commit}) {
+        firebase.database().ref('movies').once('value')
+          .then((data) => {
+            const filmKeys = []
+            const obj = data.val()
+
+            for (let key in obj) {
+              filmKeys.push(
+                Number(key)
+              )
+            }
+            commit('setAllFilmsKeys', filmKeys)
+          })
+      },
     },
     getters: {
       filterFavoriteMovies(state) {
@@ -135,6 +153,9 @@ const createStore = () => {
           return obj.list_banner
         })
         return bannerArray;
+      },
+      allFilmsKeys(state) {
+        return state.allFilmsKeys;
       }
     }
   })
