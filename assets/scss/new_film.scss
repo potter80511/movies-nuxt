@@ -1,0 +1,57 @@
+#new_film {
+  margin-top: 130px;
+  #new_film_form {
+    .input-group {
+      margin-bottom: 10px;
+      .group {
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+      .favorite-check {
+        width: 22px;
+        height: 22px;
+        display: inline-block;
+        background: #555;
+        border: 1px solid #111;
+        border-radius: 2px;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: all .3s;
+        &:before {
+          content: '';
+          display: block;
+          border: solid #fff;
+          border-width: 2px 0 0 2px;
+          width: 8px;
+          height: 14px;
+          transform: rotate(225deg) translate(-5px, 3px);
+          opacity: 0;
+          transition: all .3s;
+        }
+        &.is-checked {
+          background: #333;
+          border-color: #d0a554;
+          &:before {
+            opacity: 1;
+          }
+        }
+      }
+      &.cast {
+        svg {
+          color: #666;
+          transition: all .3s;
+          cursor: pointer;
+          &:hover {
+            color: #aaa;
+          }
+        }
+        .group {
+          label {
+            margin: 0 10px 0 0;
+          }
+        }
+      }
+    }
+  }
+}

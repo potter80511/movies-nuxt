@@ -39,7 +39,7 @@
                 <div class="rates">
                   <b>IMDB 評分：</b>
                   <span v-for="(star, j) in rateTenStar(filmData.rates)"
-                          :key="j">
+                        :key="j">
                     <font-awesome-icon v-if="star==='star'" icon="star" />
                     <font-awesome-icon v-if="star==='half'" icon="star-half-alt" />
                     <font-awesome-icon v-if="star==='empty'" :icon="['far', 'star']"/>

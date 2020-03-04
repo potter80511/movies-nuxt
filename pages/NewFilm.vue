@@ -42,6 +42,21 @@
           <label>導演：</label>
           <input id="filmDirector" type="text" />
         </div>
+        <div class="input-group cast">
+          <div class="group">
+            <label>演員</label>
+            <font-awesome-icon icon="plus" @click="addCastHandler" />
+          </div>
+          <div v-if="casts.length > 0">
+            <div
+              v-for="(cast, i) in casts"
+              :key="i"
+            >
+              <input :id="`cast_${cast.id}`" type="text" />
+              <font-awesome-icon icon="times" @click="deleteCastHandler(cast.id, i)" />
+            </div>
+          </div>
+        </div>
         <div class="input-group">
           <label>IMDB ID：</label>
           <input id="filmImdbId" type="text" />
@@ -81,6 +96,7 @@ export default {
       nextKey: 0,
       favoriteCheck: false,
       isCheckedClass: 'is-checked',
+      casts: [],
     }
   },
   created() {
@@ -109,6 +125,20 @@ export default {
     }
   },
   methods: {
+    addCastHandler() {
+      const casts = this.casts;
+      const castInputId = casts.length + 1;
+      casts.push({
+        id: castInputId
+      });
+    },
+    deleteCastHandler(id, inputIndex) {
+      const casts = this.casts;
+      casts.splice(inputIndex, 1);
+      casts.forEach((item, index) => {
+        item.id = index + 1;
+      });
+    },
     favoriteCheckHandler() {
       this.favoriteCheck = !this.favoriteCheck;
     },
@@ -157,40 +187,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  #new_film {
-    margin-top: 130px;
-    #new_film_form {
-      .input-group {
-        .favorite-check {
-          width: 22px;
-          height: 22px;
-          display: inline-block;
-          background: #555;
-          border: 1px solid #111;
-          border-radius: 2px;
-          margin-right: 10px;
-          cursor: pointer;
-          transition: all .3s;
-          &:before {
-            content: '';
-            display: block;
-            border: solid #fff;
-            border-width: 2px 0 0 2px;
-            width: 8px;
-            height: 14px;
-            transform: rotate(225deg) translate(-5px, 3px);
-            opacity: 0;
-            transition: all .3s;
-          }
-          &.is-checked {
-            background: #333;
-            border-color: #d0a554;
-            &:before {
-              opacity: 1;
-            }
-          }
-        }
-      }
-    }
-  }
+  @import "~/assets/scss/new_film.scss";
 </style>
