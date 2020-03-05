@@ -52,7 +52,11 @@
               v-for="(cast, i) in casts"
               :key="i"
             >
-              <input :id="`cast_${cast.id}`" type="text" />
+              <input
+                :id="`cast_${cast.id}`"
+                type="text"
+                v-model="cast.castName"
+              />
               <font-awesome-icon icon="times" @click="deleteCastHandler(cast.id, i)" />
             </div>
           </div>
@@ -153,17 +157,38 @@ export default {
       let area = document.getElementById("filmArea").value;
       let brief = document.getElementById("filmBrief").value;
       let director = document.getElementById("filmDirector").value;
+
+      let castNameArray = [];
+      const casts = this.casts;
+      casts.forEach((item, index) => {
+        let keyName = 0;
+        if (index < 9) {
+          keyName = '0' + (index + 1);
+        } else {
+          keyName = index + 1;
+        }
+        castNameArray.push({
+          [keyName]: item.castName
+        });
+      });
+      const filmCasts = castNameArray.reduce((result, item) => {
+        const key = Object.keys(item)[0]; // key name 00, 01, 02, ...
+        result[key] = item[key];
+        return result;
+      }, {});
+
       let imdbId = document.getElementById("filmImdbId").value;
       let myRate = document.getElementById("filmMyRate").value;
       let summary = document.getElementById("filmSummary").value;
       let trailer = document.getElementById("filmTrailer").value;
       let wallpaper = document.getElementById("filmWallpaper").value;
       let year = document.getElementById("filmYear").value;
-      // console.log(favorite)
+      console.log(filmCasts);
 
       firebase.database().ref(`movies/${nextKey}`).set({
         area: area,
         brief: brief,
+        cast: filmCasts,
         director: director,
         imdb_id: imdbId,
         name: name,
