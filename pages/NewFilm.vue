@@ -10,9 +10,15 @@
           <label>劇名稱（中文）：</label>
           <input id="filmTwName" type="text" />
         </div>
-        <div class="input-group">
+        <div class="input-group film-type">
           <label>劇種類：</label>
-          <input id="filmType" type="text" />
+          <div class="type-select">
+            <select v-model="filmType">
+              <option value="movies">電影</option>
+              <option value="series">影集</option>
+            </select>
+            <font-awesome-icon icon="chevron-down" />
+          </div>
         </div>
         <div class="input-group">
           <label>系列：</label>
@@ -30,9 +36,19 @@
           <label>IMDB 評分：</label>
           <input id="filmImdbRate" type="text" />
         </div>
-        <div class="input-group">
+        <div class="input-group film-area">
           <label>地區：</label>
-          <input id="filmArea" type="text" />
+          <div class="area-select">
+            <select v-model="filmArea">
+              <option value="" selected hidden>請選擇</option>
+              <option
+                v-for="(area, i) in areaDatas"
+                :value="area"
+                :key="i"
+              >{{area}}</option>
+            </select>
+            <font-awesome-icon icon="chevron-down" />
+          </div>
         </div>
         <div class="input-group">
           <label>年份：</label>
@@ -118,8 +134,19 @@ export default {
     return {
       maxKey: 0,
       nextKey: 0,
+      filmType: 'movies',
       favoriteCheck: false,
       isCheckedClass: 'is-checked',
+      areaDatas: [
+        '美國',
+        '英國',
+        '韓國',
+        '泰國',
+        '日本',
+        '印度',
+        '西班牙'
+      ],
+      filmArea: '',
       castInputs: [],
       categoriesName: [
         {
@@ -253,10 +280,10 @@ export default {
       let name = document.getElementById("filmName").value;
       let twName = document.getElementById("filmTwName").value;
       let favorite = this.favoriteCheck;
-      let type = document.getElementById("filmType").value;
+      const type = this.filmType;
       let related = document.getElementById("filmSeries").value;
       let imdbRate = document.getElementById("filmImdbRate").value;
-      let area = document.getElementById("filmArea").value;
+      const area = this.filmArea;
       let brief = document.getElementById("filmBrief").value;
       let director = document.getElementById("filmDirector").value;
 
@@ -306,7 +333,7 @@ export default {
         result[key] = item[key];
         return result;
       }, {});
-      // console.log(related);
+      // console.log(area);
 
       firebase.database().ref(`movies/${nextKey}`).set({
         area: area,

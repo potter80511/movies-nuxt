@@ -1,12 +1,55 @@
 #new_film {
   margin-top: 130px;
   #new_film_form {
+    label {
+      margin: 0;
+    }
+    .input-group, .group {
+      display: flex;
+      align-items: center;
+    }
+    .type-select, .area-select {
+      position: relative;
+      svg {
+        pointer-events: none;
+      }
+    }
     .input-group {
       margin-bottom: 10px;
       .group {
-        display: flex;
-        align-items: center;
         width: 100%;
+      }
+      &.film-type, &.film-area {
+        select, svg {
+          color: #888;
+        }
+        select {
+          border-radius: 0;
+          -webkit-appearance: none;
+          background: none;
+          padding: 5px 30px 0px 10px;
+          transition: none!important;
+          cursor: pointer;
+          border-color: #8a754d;
+          &:focus {
+            outline: none;
+          }
+          &:hover {
+            color: #aaa;
+            box-shadow: 0 0 8px #000;
+            border-color: #d0a554;
+            +svg {
+              color: #aaa;
+            }
+          }
+        }
+        svg {
+          position: absolute;
+          right: 10px;
+          top: 8px;
+          font-size: 14px;
+          transition: none!important;
+        }
       }
       .favorite-check, .category-check {
         width: 22px;

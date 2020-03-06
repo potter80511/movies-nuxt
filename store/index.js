@@ -30,7 +30,7 @@ const createStore = () => {
             const movies = []
             const obj = data.val()
 
-            for (let key in obj) {
+            for (let key in obj) { // key剛好等於每包電影物件的key name
               movies.push({
                 id: key,
                 area: obj[key].area,
