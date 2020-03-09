@@ -154,9 +154,9 @@
         const currentSelectedCategory = this.currentSelectedCategory;
         const currentSelectedYear = this.currentSelectedYear;
 
-        if(currentSelectedArea !== '全部' && currentSelectedCategory !== '00' && currentSelectedYear !== '全部' ) {
+        if(currentSelectedArea !== '全部' && currentSelectedCategory !== '00' && currentSelectedYear !== '全部' ) { // 如果都不是選全部
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           }).filter(c => {
             const categoriesKey = Object.keys(c.categories || {})
             return categoriesKey.includes(currentSelectedCategory)
@@ -174,14 +174,14 @@
           return filteredData
         } else if (currentSelectedArea !== '全部' && currentSelectedCategory === '00' && currentSelectedYear !== '全部') {
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           }).filter(y => {
             return y.year === currentSelectedYear
           })
           return filteredData
         } else if (currentSelectedArea !== '全部' && currentSelectedCategory !== '00' && currentSelectedYear === '全部') {
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           }).filter(c => {
             const categoriesKey = Object.keys(c.categories || {})
             return categoriesKey.includes(currentSelectedCategory)
@@ -189,7 +189,7 @@
           return filteredData
         } else if (currentSelectedArea !== '全部' && currentSelectedCategory === '00' && currentSelectedYear === '全部' ) {
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           })
           return filteredData
         } else if (currentSelectedArea === '全部' && currentSelectedCategory !== '00' && currentSelectedYear === '全部' ) {
@@ -206,7 +206,7 @@
         } else {
           return data
         }
-
+        // console.log()
       },
       bannerData() {
         const routeType = this.$route.name

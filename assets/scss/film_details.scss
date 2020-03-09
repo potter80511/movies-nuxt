@@ -59,10 +59,10 @@
       }
       .words {
         *{text-shadow: 3px 3px 5px #000;}
-        .director, .type, .rates, .my_rate, .casts, .writers, .year, .categories, .end, .brief {
+        .director, .area, .type, .rates, .my_rate, .casts, .writers, .year, .categories, .end, .brief {
           margin-bottom: 10px;
         }
-        .casts, .director, .writers, .categories, .brief {
+        .casts, .director, .area, .writers, .categories, .brief {
           display: flex;
           b{
             min-width: 48px;

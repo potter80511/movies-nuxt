@@ -70,13 +70,21 @@
                   <router-link :to="'/series'" v-if="filmData.type === 'series'">影集</router-link>
                   <router-link :to="'/movies'" v-else-if="filmData.type === 'movies'">電影</router-link>
                 </div>
+                <div class="area" v-if="filmData.area !== ''">
+                  <b>地區：</b>
+                  <div>
+                    <span>{{filmData.area}}</span>
+                  </div>
+                </div>
                 <div class="director" v-if="filmData.type === 'movies' && filmData.director">
                   <b>導演：</b>
                   <div>
                     <span>{{filmData.director}}</span>
                   </div>
                 </div>
-                <div class="writers" v-else-if="filmData.type === 'series' && writersData.length > 0">
+                <div class="writers"
+                  v-else-if="filmData.type === 'series' && writersData.length > 0"
+                >
                   <b>編劇：</b>
                   <div>
                     <span v-for="(item, i) in writersData"
@@ -175,6 +183,7 @@
     data() {
       return {
         filmData: {
+          area: "",
           brief: "",
           categories: {},
           cast: {},
@@ -232,6 +241,11 @@
           //導演資料
           if (val.writers){
             this.writersData = objToArray(val.writers)
+          }
+
+          // 地區資料
+          if (val.area) {
+            this.area = val.area;
           }
 
           //種類資料
