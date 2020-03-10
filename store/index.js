@@ -8,13 +8,17 @@ const createStore = () => {
       series: [],
       currentFilm: null,
       allFilmsKeys: [],
+      moviesIsLoading: true,
+      seriesIsLoading: true,
     },
     mutations: { //更改狀態
       setLoadedMovies(state, payload) {
         state.movies = payload
+        state.moviesIsLoading = false
       },
       setLoadedSeries(state, payload) {
         state.series = payload
+        state.seriesIsLoading = false
       },
       setCurrentFilm(state, payload) {
         state.currentFilm = payload

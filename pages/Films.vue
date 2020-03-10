@@ -3,6 +3,7 @@
     <BannerSlide
       :bannerData="bannerData"
       :background="true"
+      :isLoading="isLoading"
     />
     <div class="film_list">
       <div class="container">
@@ -25,6 +26,12 @@
               {{`新增${filmsListType}`}}
             </b-button>
           </h2>
+        </div>
+        <div
+          class="isLoading"
+          v-show="isLoading"
+        >
+          <font-awesome-icon icon="spinner" spin/>
         </div>
         <div class="row list_content" v-if="filmsData.length > 0">
           <div class="item col-lg-4 col-sm-6"
@@ -99,8 +106,8 @@
             </nuxt-link>
           </div>
         </div>
-        <div class="row list_content" v-else>
-          <p>沒有篩選結果</p>
+        <div class="row list_content" v-else-if="filmsData.length === 0 && isLoading === false">
+          <p class="no_result">沒有篩選結果</p>
         </div>
       </div>
     </div>
@@ -239,6 +246,9 @@
         }
         return []
       },
+      isLoading() {
+        return this.filmsListType === '電影' ? this.$store.state.moviesIsLoading : this.$store.state.seriesIsLoading
+      }
     },
     watch: {
       allFilmsKeys(keys) {

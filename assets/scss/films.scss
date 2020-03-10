@@ -37,6 +37,9 @@
     }
   }
   .list_content {
+    .no_result {
+      padding: 0 15px;
+    }
     .item {
       margin-bottom: 20px;
       >a {

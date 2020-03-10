@@ -1,6 +1,12 @@
 <template>
   <div class="banner" ref="bannerSlide">
     <div
+      class="isLoading"
+      v-show="isLoading"
+    >
+      <font-awesome-icon icon="spinner" spin/>
+    </div>
+    <div
       v-swiper:swiperBannerBg="swiperBanner"
       v-if="bannerData.length > 0 && background === true"
     >
@@ -9,8 +15,8 @@
           class="swiper-slide"
           v-for="(item, i) in bannerData"
           :key="i"
-          :style="{backgroundImage: 'url(' + item + ')', height: 500 + 'px'}"
-          >
+          :style="{backgroundImage: 'url(' + item + ')', height: 50 + 'vw'}"
+        >
         </div>
       </div>
     </div>
@@ -41,6 +47,9 @@
 <script>
   export default {
     props: {
+      isLoading: {
+        type: Boolean,
+      },
       bannerData: {
         type: Array,
       },

@@ -13,6 +13,12 @@
         <h2>{{sectionTitle}}<span>{{subTitle}}</span></h2>
       </div>
       <div
+        class="isLoading"
+        v-show="isLoading"
+      >
+        <font-awesome-icon icon="spinner" spin/>
+      </div>
+      <div
         v-swiper:indexListSwiper="swiperOpitons"
         v-if="filmsData.length > 0"
       >
@@ -42,6 +48,9 @@
 
   export default {
     props: {
+      isLoading: {
+        type: Boolean,
+      },
       blockId: {
         type: String,
         default: '',

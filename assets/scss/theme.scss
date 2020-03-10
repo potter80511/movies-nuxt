@@ -109,9 +109,22 @@ img {
     }
   }
 }
+.isLoading {
+  width: 100%;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    font-size: 36px;
+  }
+}
 .banner {
   position: relative;
   margin-bottom: 30px;
+  .isLoading {
+    height: 50vw;
+  }
   .swiper-button {
     transition: all .3s;
     opacity: 0;
