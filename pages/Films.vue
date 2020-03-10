@@ -17,15 +17,13 @@
           :filterYearMethod="filterYearMethod"
         />
         <div class="section-header">
-          <h2 v-if="$route.name === 'movies'">
-            電影列表
-            <span>Movies</span>
-            <b-button v-b-modal.new_film>新增電影</b-button>
-          </h2>
-          <h2 v-else-if="$route.name === 'series'">
-            影集列表
-            <span>Series</span>
-            <b-button v-b-modal.new_film>新增影集</b-button>
+          <h2>
+            {{`${filmsListType}列表`}}
+            <span>{{$route.name}}</span>
+            <b-button id="show-btn" @click="$bvModal.show('new_film')">
+              <font-awesome-icon icon="plus-circle" />
+              {{`新增${filmsListType}`}}
+            </b-button>
           </h2>
         </div>
         <div class="row list_content" v-if="filmsData.length > 0">
