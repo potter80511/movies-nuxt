@@ -1,5 +1,15 @@
 @import 'color.scss';
-
+.new_film {
+  .modal-dialog {
+    background-color: #fff;
+    @media (min-width: 576px) {
+      max-width: 60vw;
+    }
+    .modal-content {
+      background: #333;
+    }
+  }
+}
 #films {
   * {transition: all .3s;}
   div, h3, h4, p, a {

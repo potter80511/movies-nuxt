@@ -11,7 +11,6 @@ const routerBase = process.env.DEPLOY_ENV === 'GH_PAGES' ? {
     extendRoutes (routes) {
       routes.push({name: 'movies', path: '/movies', component: '~/pages/Films.vue'})
       routes.push({name: 'series', path: '/series', component: '~/pages/Films.vue'})
-      routes.push({name: 'new film', path: '/new_film', component: '~/pages/NewFilm.vue'})
     }
   },
 }

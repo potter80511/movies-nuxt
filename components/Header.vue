@@ -27,11 +27,6 @@
           >
             Series
           </nuxt-link>
-          <nuxt-link
-            to="/new_film"
-          >
-            New Film
-          </nuxt-link>
         </div>
         <font-awesome-icon icon="bars" ref="menuBar" />
       </div>

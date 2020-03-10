@@ -17,8 +17,16 @@
           :filterYearMethod="filterYearMethod"
         />
         <div class="section-header">
-          <h2 v-if="$route.name === 'movies'">電影列表<span>Movies</span></h2>
-          <h2 v-else-if="$route.name === 'series'">影集列表<span>Series</span></h2>
+          <h2 v-if="$route.name === 'movies'">
+            電影列表
+            <span>Movies</span>
+            <b-button v-b-modal.new_film>新增電影</b-button>
+          </h2>
+          <h2 v-else-if="$route.name === 'series'">
+            影集列表
+            <span>Series</span>
+            <b-button v-b-modal.new_film>新增影集</b-button>
+          </h2>
         </div>
         <div class="row list_content" v-if="filmsData.length > 0">
           <div class="item col-lg-4 col-sm-6"
@@ -98,14 +106,20 @@
         </div>
       </div>
     </div>
+    <NewFilmModal
+      :filmsListType="filmsListType"
+      @add_film_submit="(newFilmData) => add_film(newFilmData)"
+    />
   </div>
 </template>
 
 <script>
   import { rateStarWithEmpty } from '~/plugins/helper';
   import { objToArray } from '~/plugins/helper';
+  import * as firebase from 'firebase';
   import BannerSlide from '~/components/BannerSlide';
   import FilterTools from '~/components/FilterTools';
+  import NewFilmModal from '~/components/NewFilmModal';
 
   export default {
     data () {
@@ -123,19 +137,29 @@
             prevEl: '.banner .swiper-button-prev',
           },
         },
+        filmsListType: '',
         directorData: [],
         currentSelectedArea: '全部',
         currentSelectedCategory: '00',
         currentSelectedYear: '全部',
-        sortBy: 'imdbRates'
-        // filmsData: []
+        sortBy: 'imdbRates',
+        maxKey: 0,
+        nextKey: 0,
       }
     },
     components: {
       BannerSlide,
       FilterTools,
+      NewFilmModal,
+    },
+    created() {
+      this.filmsListType = this.$route.name === 'movies' ? '電影' : '影集';
+      this.$store.dispatch('loadedAllFilmsKeys');
     },
     computed: {
+      allFilmsKeys() {
+        return this.$store.getters.allFilmsKeys
+      },
       filmsData() {
         const routeType = this.$route.name
         let data = []
@@ -218,6 +242,19 @@
         return []
       },
     },
+    watch: {
+      allFilmsKeys(keys) {
+        if(keys) {
+          keys.forEach(item => {
+            this.maxKey = item > this.maxKey ? item : this.maxKey
+          });
+          this.nextKey = this.maxKey + 1;
+          if (this.nextKey < 100) {
+            this.nextKey = "0" + String(this.nextKey)
+          }
+        }
+      }
+    },
     methods: {
       rateStarWithEmpty(rates) {
         return rateStarWithEmpty(rates)
@@ -236,6 +273,17 @@
       filterYearMethod(key) {
         this.currentSelectedYear = key
       },
+      add_film(newFilmData) {
+        const nextKey = this.nextKey;
+        // console.log(newFilmData)
+        firebase.database().ref(`movies/${nextKey}`).set(
+          newFilmData
+        ).then(() => {
+          alert('success');
+        }).catch(() => {
+          alert('error');
+        });
+      }
       // bannerRWD() {
       //   const bannerWidth = this.$refs.bannerSlide.clientWidth;
       //   return bannerRWD(bannerWidth);

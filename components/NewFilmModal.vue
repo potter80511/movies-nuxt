@@ -1,5 +1,12 @@
 <template>
-  <div id="new_film">
+  <b-modal
+    id="new_film"
+    modal-class="new_film"
+    :title="`新增${filmsListType}`"
+    ok-title="新增"
+    cancel-title="取消"
+    @ok="add_film_submit"
+  >
     <div class="container">
       <div id="new_film_form">
         <div class="input-group">
@@ -119,21 +126,26 @@
         </div>
         <div class="submit">
           <!-- <input type="submit" value="新增" @click="add_film" /> -->
-          <button @click="add_film">新增</button>
+          <!-- <button @click="add_film">新增</button> -->
         </div>
       </div>
     </div>
-  </div>
+  </b-modal>
 </template>
 
 <script>
-import * as firebase from 'firebase';
 
 export default {
+  props: {
+    filmsListType: {
+      type: String,
+    },
+    add_film: {
+      type: Function,
+    },
+  },
   data () {
     return {
-      maxKey: 0,
-      nextKey: 0,
       filmType: 'movies',
       favoriteCheck: false,
       isCheckedClass: 'is-checked',
@@ -224,28 +236,7 @@ export default {
           name: '溫馨',
           checked: false,
         },
-      ]
-    }
-  },
-  created() {
-    this.$store.dispatch('loadedAllFilmsKeys')
-  },
-  computed: {
-    allFilmsKeys() {
-      return this.$store.getters.allFilmsKeys
-    }
-  },
-  watch: {
-    allFilmsKeys(keys) {
-      if(keys) {
-        keys.forEach(item => {
-          this.maxKey = item > this.maxKey ? item : this.maxKey
-        });
-        this.nextKey = this.maxKey + 1;
-        if (this.nextKey < 100) {
-          this.nextKey = "0" + String(this.nextKey)
-        }
-      }
+      ],
     }
   },
   methods: {
@@ -274,9 +265,7 @@ export default {
         }
       });
     },
-    add_film() {
-      const nextKey = this.nextKey;
-
+    add_film_submit() {
       let name = document.getElementById("filmName").value;
       let twName = document.getElementById("filmTwName").value;
       let favorite = this.favoriteCheck;
@@ -335,7 +324,7 @@ export default {
       }, {});
       // console.log(area);
 
-      firebase.database().ref(`movies/${nextKey}`).set({
+      const newFilmData = {
         area: area,
         brief: brief,
         cast: filmCasts,
@@ -353,11 +342,9 @@ export default {
         trailer,
         wallpaper,
         year: Number(year),
-      }).then(() => {
-        alert('success');
-      }).catch(() => {
-        alert('error');
-      });
+      };
+
+      this.$emit('add_film_submit', newFilmData);
     }
   }
 }
