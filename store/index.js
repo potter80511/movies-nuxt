@@ -10,6 +10,8 @@ const createStore = () => {
       allFilmsKeys: [],
       moviesIsLoading: true,
       seriesIsLoading: true,
+      isLogin: false,
+      loginUser: '',
     },
     mutations: { //更改狀態
       setLoadedMovies(state, payload) {
@@ -26,8 +28,28 @@ const createStore = () => {
       setAllFilmsKeys(state, payload) {
         state.allFilmsKeys = payload
       },
+      setIsLogin(state, payload) {
+        state.isLogin = payload
+      },
+      setLoginUser(state, payload) {
+        state.loginUser = payload
+      },
     },
     actions: {
+      loginState({commit}) {
+        firebase.auth().onAuthStateChanged(user => {
+          const isLogin = user ? true : false;
+          commit('setIsLogin', isLogin)
+          if (user) {
+            const email = user.email;
+            commit('setLoginUser', email)
+            console.log(`login ${isLogin}, `, `Admin is ${email}`)
+          } else {
+            commit('setLoginUser', '')
+            console.log(`login ${isLogin}, `, `Admin not login`)
+          }
+        });
+      },
       loadedMovies({commit}) {
         firebase.database().ref('movies').orderByChild('type').equalTo('movies').once('value')
           .then((data) => {
@@ -116,6 +138,9 @@ const createStore = () => {
       },
     },
     getters: {
+      getLoginState(state) {
+        return state.isLogin
+      },
       filterFavoriteMovies(state) {
         const filterData = state.movies.filter((o) => {
           return o.favorite === true

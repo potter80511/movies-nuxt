@@ -21,7 +21,10 @@
           <h2>
             {{`${filmsListType}列表`}}
             <span>{{$route.name}}</span>
-            <b-button id="show-btn" @click="$bvModal.show('new_film')">
+            <b-button
+              id="show-btn"
+              @click="$bvModal.show('new_film')"
+              v-if="isLogin">
               <font-awesome-icon icon="plus-circle" />
               {{`新增${filmsListType}`}}
             </b-button>
@@ -162,6 +165,9 @@
       this.$store.dispatch('loadedAllFilmsKeys');
     },
     computed: {
+      isLogin() {
+        return this.$store.state.isLogin;
+      },
       allFilmsKeys() {
         return this.$store.getters.allFilmsKeys
       },

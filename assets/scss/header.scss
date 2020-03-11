@@ -1,7 +1,7 @@
 @import 'color.scss';
 
 header {
-  a {
+  a, button {
     &.nuxt-link-exact-active, &:hover {
       color: #fff;
       text-shadow: 0 0 8px #fff;
@@ -64,13 +64,15 @@ header {
   .menu {
     display: flex;
     justify-content: space-between;
-    a {
+    a, button {
       font-size: 16px;
+      padding: 0;
       background: none!important;
       color: $nav-link;
       text-transform: capitalize;
       box-shadow: none;
       border-radius: 0!important;
+      border: none;
       margin-left: 20px;
     }
     .fa-bars {

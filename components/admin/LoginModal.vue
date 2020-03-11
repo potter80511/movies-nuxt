@@ -5,6 +5,7 @@
     title="登入"
     ok-title="登入"
     cancel-title="取消"
+    @ok="login_submit"
   >
     <div class="login-form">
       <div class="input-group">
@@ -18,6 +19,24 @@
     </div>
   </b-modal>
 </template>
+
+<script>
+  export default {
+    // props: {
+    //   add_film: {
+    //     type: Function,
+    //   },
+    // },
+    methods: {
+      login_submit() {
+        const name = document.getElementById('login_name').value;
+        const password = document.getElementById('login_password').value;
+        // console.log(loginName,loginPassword)
+        this.$emit('login_submit', name, password);
+      }
+    }
+  }
+</script>
 
 <style lang="scss">
   #login {
