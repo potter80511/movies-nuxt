@@ -27,6 +27,9 @@
           >
             Series
           </nuxt-link>
+          <b-button id="show-login-btn" @click="$bvModal.show('login')">
+            login
+          </b-button>
         </div>
         <font-awesome-icon icon="bars" ref="menuBar" />
       </div>
@@ -56,11 +59,18 @@
         </div>
       </div>
     </div>
+    <LoginModal
+    />
   </header>
 </template>
 
 <script>
+  import LoginModal from '~/components/admin/LoginModal';
+
   export default {
+    components: {
+      LoginModal,
+    },
     mounted() {
       if(document.body.clientWidth > 991) {
         document.addEventListener('scroll', () => {

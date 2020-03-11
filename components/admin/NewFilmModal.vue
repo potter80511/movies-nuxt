@@ -124,10 +124,6 @@
           <label>海報連結：</label>
           <input id="filmWallpaper" type="text" />
         </div>
-        <div class="submit">
-          <!-- <input type="submit" value="新增" @click="add_film" /> -->
-          <!-- <button @click="add_film">新增</button> -->
-        </div>
       </div>
     </div>
   </b-modal>

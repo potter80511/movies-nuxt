@@ -109,6 +109,11 @@ img {
     }
   }
 }
+.modal-dialog {
+  .modal-content {
+    background: #333;
+  }
+}
 .isLoading {
   width: 100%;
   z-index: 10000;

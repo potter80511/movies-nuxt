@@ -124,7 +124,7 @@
   import * as firebase from 'firebase';
   import BannerSlide from '~/components/BannerSlide';
   import FilterTools from '~/components/FilterTools';
-  import NewFilmModal from '~/components/NewFilmModal';
+  import NewFilmModal from '~/components/admin/NewFilmModal';
 
   export default {
     data () {
