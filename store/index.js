@@ -156,17 +156,17 @@ const createStore = () => {
       filterIndexBanner(state) {
         const filterData = state.series.filter((o) => {
           // console.log(o.index_banner)
-          return o.index_banner === true
+          return o.index_banner !== "" && o.index_banner !== undefined
         });
         const bannerArray = filterData.map((obj)=> {
-          return obj.banner
+          return obj.index_banner
         })
         return bannerArray;
       },
       moviesBanner(state) {
         const filterData = state.movies.filter((o) => {
           // console.log(o.list_banner)
-          return o.list_banner !== undefined
+          return o.list_banner !== undefined && o.list_banner !== ""
         });
         const bannerArray = filterData.map((obj)=> {
           return obj.list_banner
@@ -176,7 +176,7 @@ const createStore = () => {
       seriesBanner(state) {
         const filterData = state.series.filter((o) => {
           // console.log(o.list_banner)
-          return o.list_banner !== undefined
+          return o.list_banner !== undefined && o.list_banner !== ""
         });
         const bannerArray = filterData.map((obj)=> {
           return obj.list_banner

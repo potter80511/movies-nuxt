@@ -17,23 +17,29 @@
           <label>劇名稱（中文）：</label>
           <input id="filmTwName" type="text" />
         </div>
-        <div class="input-group film-type">
-          <label>劇種類：</label>
-          <div class="type-select">
-            <select v-model="filmType">
-              <option value="movies">電影</option>
-              <option value="series">影集</option>
-            </select>
-            <font-awesome-icon icon="chevron-down" />
-          </div>
+        <div class="input-group" v-show="filmsListType === '影集'">
+          <span
+            :class="[endCheck ? isCheckedClass : '', 'endCheck-check label-check']"
+            @click="endCheckHandler"
+          >
+          </span>
+          <label>是否完結？</label>
+        </div>
+        <div class="input-group" v-show="filmsListType === '影集'">
+          <label>首頁主圖連結：</label>
+          <input id="indexBanner" type="text" />
         </div>
         <div class="input-group">
+          <label>列表主圖連結：</label>
+          <input id="listBanner" type="text" />
+        </div>
+        <div class="input-group" v-show="filmsListType === '電影'">
           <label>系列：</label>
           <input id="filmSeries" type="text" />
         </div>
         <div class="input-group">
           <span
-            :class="[favoriteCheck ? isCheckedClass : '', 'favorite-check']"
+            :class="[favoriteCheck ? isCheckedClass : '', 'favorite-check label-check']"
             @click="favoriteCheckHandler"
           >
           </span>
@@ -46,7 +52,7 @@
         <div class="input-group film-area">
           <label>地區：</label>
           <div class="area-select">
-            <select v-model="filmArea">
+            <select v-model="area">
               <option value="" selected hidden>請選擇</option>
               <option
                 v-for="(area, i) in areaDatas"
@@ -69,7 +75,7 @@
               :key="i"
             >
               <span
-                :class="[categorieName.checked ? isCheckedClass : '', 'category-check']"
+                :class="[categorieName.checked ? isCheckedClass : '', 'category-check label-check']"
                 @click="categoiesCheckedHandler(categorieName.id)"
               >
               </span>
@@ -142,8 +148,8 @@ export default {
   },
   data () {
     return {
-      filmType: 'movies',
       favoriteCheck: false,
+      endCheck: false,
       isCheckedClass: 'is-checked',
       areaDatas: [
         '美國',
@@ -154,7 +160,6 @@ export default {
         '印度',
         '西班牙'
       ],
-      filmArea: '',
       castInputs: [],
       categoriesName: [
         {
@@ -250,6 +255,9 @@ export default {
         item.id = index + 1;
       });
     },
+    endCheckHandler() {
+      this.endCheck = !this.endCheck;
+    },
     favoriteCheckHandler() {
       this.favoriteCheck = !this.favoriteCheck;
     },
@@ -262,18 +270,28 @@ export default {
       });
     },
     add_film_submit() {
+      const {
+        area,
+        filmsListType,
+        castInputs,
+        categoriesName,
+      } = this;
+
       let name = document.getElementById("filmName").value;
       let twName = document.getElementById("filmTwName").value;
+      const stll = !this.endCheck;
       let favorite = this.favoriteCheck;
-      const type = this.filmType;
+
+      let indexBannerLink = "";
+      indexBannerLink = filmsListType === '影集' ? document.getElementById("indexBanner").value : "";
+      const listBannerLink = document.getElementById("listBanner").value;
+
       let related = document.getElementById("filmSeries").value;
       let imdbRate = document.getElementById("filmImdbRate").value;
-      const area = this.filmArea;
       let brief = document.getElementById("filmBrief").value;
       let director = document.getElementById("filmDirector").value;
 
       let castNameArray = [];
-      const castInputs = this.castInputs;
       castInputs.forEach((item, index) => {  // 先做出[{01: a}, {02: b}]
         let keyName = 0;
         if (index < 9) {
@@ -301,10 +319,12 @@ export default {
       let myRate = document.getElementById("filmMyRate").value;
       let summary = document.getElementById("filmSummary").value;
       let trailer = document.getElementById("filmTrailer").value;
+
+      const type = filmsListType === '影集' ? 'series' : 'movies';
+
       let wallpaper = document.getElementById("filmWallpaper").value;
       let year = document.getElementById("filmYear").value;
 
-      const categoriesName = this.categoriesName;
       const checkedCategories = categoriesName.filter(item => ( // 先篩選被勾選的
         item.checked === true
       )).map(item => { //再組出[{01: name1}, {02: name2}]
@@ -321,12 +341,14 @@ export default {
       // console.log(area);
 
       const newFilmData = {
-        area: area,
+        area,
         brief: brief,
         cast: filmCasts,
         categories: filmCategories,
         director,
         imdb_id: imdbId,
+        index_banner: indexBannerLink,
+        list_banner: listBannerLink,
         name,
         rates: Number(imdbRate),
         related,
@@ -334,6 +356,7 @@ export default {
         tw_name: twName,
         type,
         my_rate: Number(myRate),
+        stll,
         summary,
         trailer,
         wallpaper,
