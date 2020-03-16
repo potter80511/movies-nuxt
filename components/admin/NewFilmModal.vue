@@ -52,7 +52,7 @@
         <div class="input-group film-area">
           <label>地區：</label>
           <div class="area-select">
-            <select v-model="area">
+            <select v-model="filmArea">
               <option value="" selected hidden>請選擇</option>
               <option
                 v-for="(area, i) in areaDatas"
@@ -148,6 +148,7 @@ export default {
   },
   data () {
     return {
+      filmArea: '',
       favoriteCheck: false,
       endCheck: false,
       isCheckedClass: 'is-checked',
@@ -271,7 +272,7 @@ export default {
     },
     add_film_submit() {
       const {
-        area,
+        filmArea,
         filmsListType,
         castInputs,
         categoriesName,
@@ -341,7 +342,7 @@ export default {
       // console.log(area);
 
       const newFilmData = {
-        area,
+        area: filmArea,
         brief: brief,
         cast: filmCasts,
         categories: filmCategories,
