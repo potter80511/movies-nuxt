@@ -140,7 +140,7 @@
               v-for="(item, i) in filmData.seasons"
               :key="i" href="javascript: void(0);"
               @click="switchSeasonHandler(`season${i+1}`)"
-              :data-target="`season${i+1}`"
+              :class="{active:seasonShowTarget==`season${i+1}`}"
             >
               第 {{i + 1}} 季
             </a>
@@ -157,12 +157,11 @@
                 <h3><span class="circle"></span>劇情介紹</h3>
                 <div v-html="item.sum"></div>
               </div>
-              <div class="blocks">
+              <div class="blocks" v-show="item.trailer !== ''">
                 <h3><span class="circle"></span>預告</h3>
-                <div>{{item.trailer}}</div>
-                <!-- <div class="embed-responsive embed-responsive-16by9">
-                  <iframe class="embed-responsive-item" :src="`https://www.youtube.com/embed/${filmData.trailer}`" allowfullscreen></iframe>
-                </div> -->
+                <div class="embed-responsive embed-responsive-16by9">
+                  <iframe class="embed-responsive-item" :src="`https://www.youtube.com/embed/${item.trailer}`" allowfullscreen></iframe>
+                </div>
               </div>
             </div>
           </div>

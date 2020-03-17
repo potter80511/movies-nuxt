@@ -163,6 +163,57 @@
       }
     }
     .series_intro {
+      .season_tag {
+        margin-bottom: 35px;
+        a {
+          position: relative;
+          display: inline-block;
+          color: $text-dark;
+          transition: all .3s;
+          &:not(:last-child) {
+            margin-right: 15px;
+          }
+          &:before, &:after {
+            content: '';
+            position: absolute;
+          }
+          &:before {
+            width: 0;
+            height: 2px;
+            background: $imdb-yellow;
+            left: 50%;
+            bottom: -5px;
+            transform: translateX(-50%);
+            transition: all .3s;
+          }
+          &:after {
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-width: 0 4px;
+            border-style: solid;
+            border-color: $imdb-yellow transparent transparent transparent;
+            opacity: 0;
+            transition: all .3s;
+          }
+          &:hover {
+            color: #fff;
+          }
+          &.active {
+            color: #fff;
+            &:before {
+              width: 100%;
+            }
+            &:after {
+              border-width: 6px 4px;
+              bottom: -17px;
+              opacity: 1;
+            }
+          }
+        }
+      }
       .seasons {
         position: relative;
         // overflow: hidden;
@@ -173,6 +224,12 @@
           visibility: hidden;
           opacity: 0;
           transition: all .3s;
+          h2 {
+            margin-bottom: 25px;
+          }
+          div.blocks:not(:last-child) {
+            border-bottom: #4e565d dotted 1px;
+          }
           &.active {
             position: relative;
             visibility: visible;
