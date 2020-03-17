@@ -152,7 +152,7 @@
               :id="`season${i+1}`"
               :class="{active:seasonShowTarget==`season${i+1}`}"
             >
-              <h2>第 {{i+1}} 季 <span>{{item.name}}</span></h2>
+              <h2>第 {{i+1}} 季<span v-if="item.name"> - {{item.name}}</span></h2>
               <div class="blocks">
                 <h3><span class="circle"></span>劇情介紹</h3>
                 <div v-html="item.sum"></div>
