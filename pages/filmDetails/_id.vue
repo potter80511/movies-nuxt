@@ -136,30 +136,35 @@
         </div>
         <div class="series_intro" v-if="filmData.type === 'series'">
           <div class="season_tag">
-            <a v-for="(item, i) in filmData.seasons" :key="i" href="javascript: void(0);">
+            <a
+              v-for="(item, i) in filmData.seasons"
+              :key="i" href="javascript: void(0);"
+              @click="switchSeasonHandler(`season${i+1}`)"
+              :data-target="`season${i+1}`"
+            >
               第 {{i + 1}} 季
             </a>
           </div>
-          <div class="main_intro"
-            v-for="(item, i) in filmData.seasons"
-            :key="i"
-            :id="`season${i+1}`"
-          >
-            <h2>第 {{i+1}} 季 <span>{{item.name}}</span></h2>
-            <div class="blocks">
-              <h3><span class="circle"></span>劇情介紹</h3>
-              <div v-html="item.sum"></div>
-            </div>
-            <div class="blocks">
-              <h3><span class="circle"></span>預告</h3>
-              <div>{{item.trailer}}</div>
-            </div>
-            <!-- <div class="blocks">
-              <h3><span class="circle"></span>預告</h3>
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" :src="`https://www.youtube.com/embed/${filmData.trailer}`" allowfullscreen></iframe>
+          <div class="seasons">
+            <div class="main_intro season"
+              v-for="(item, i) in filmData.seasons"
+              :key="i"
+              :id="`season${i+1}`"
+              :class="{active:seasonShowTarget==`season${i+1}`}"
+            >
+              <h2>第 {{i+1}} 季 <span>{{item.name}}</span></h2>
+              <div class="blocks">
+                <h3><span class="circle"></span>劇情介紹</h3>
+                <div v-html="item.sum"></div>
               </div>
-            </div> -->
+              <div class="blocks">
+                <h3><span class="circle"></span>預告</h3>
+                <div>{{item.trailer}}</div>
+                <!-- <div class="embed-responsive embed-responsive-16by9">
+                  <iframe class="embed-responsive-item" :src="`https://www.youtube.com/embed/${filmData.trailer}`" allowfullscreen></iframe>
+                </div> -->
+              </div>
+            </div>
           </div>
         </div>
         <div class="main_intro" v-else>
@@ -238,6 +243,7 @@
         relatedData: [],
         sameDirectorData: [],
         showCrown: false,
+        seasonShowTarget: "season1",
       }
     },
     computed: {
@@ -248,6 +254,9 @@
     methods: {
       rateTenStar(rates) {
         return rateTenStar(rates)
+      },
+      switchSeasonHandler(target) {
+        this.seasonShowTarget = target;
       },
     },
     created() {
@@ -296,7 +305,6 @@
           if(val.seasons) {
             this.seasons = val.seasons;
           }
-
           this.filmData = val //這頁整包電影資料
 
           const data = this.$store.state.movies;

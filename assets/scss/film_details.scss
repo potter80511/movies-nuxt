@@ -162,6 +162,25 @@
         }
       }
     }
+    .series_intro {
+      .seasons {
+        position: relative;
+        // overflow: hidden;
+        .season {
+          position: absolute;
+          left: 0;
+          top: 0;
+          visibility: hidden;
+          opacity: 0;
+          transition: all .3s;
+          &.active {
+            position: relative;
+            visibility: visible;
+            opacity: 1;
+          }
+        }
+      }
+    }
     .main_intro {
       h3 {
         font-size: 24px;
