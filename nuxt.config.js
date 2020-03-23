@@ -1,23 +1,12 @@
-const routerBase = process.env.DEPLOY_ENV === 'GH_PAGES' ? {
-  router: {
-    base: '/MyImdb/',
-    extendRoutes (routes) {
-      routes.push({name: 'movies', path: '/movies', component: '~/pages/Films.vue'})
-      routes.push({name: 'series', path: '/series', component: '~/pages/Films.vue'})
-    }
-  }
-} : {
+
+export default {
+  mode: 'universal',
   router: {
     extendRoutes (routes) {
       routes.push({name: 'movies', path: '/movies', component: '~/pages/Films.vue'})
       routes.push({name: 'series', path: '/series', component: '~/pages/Films.vue'})
     }
   },
-}
-
-export default {
-  mode: 'universal',
-  ...routerBase,
   /*
   ** Headers of the page
   */
