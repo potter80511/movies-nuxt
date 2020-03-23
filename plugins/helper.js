@@ -50,7 +50,7 @@ export const objToArray = (oriData) => {
 
   if(oriData) {
     const dataArray = []
-    const dataKeys = Object.keys(oriData)
+    const dataKeys = Object.keys(oriData)  //  [key1, key2]
 
     dataKeys.forEach((dataKey) => {
       dataArray.push(oriData[dataKey])

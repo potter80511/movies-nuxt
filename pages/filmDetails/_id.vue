@@ -39,7 +39,7 @@
                 <div class="rates">
                   <b>IMDB 評分：</b>
                   <span v-for="(star, j) in rateTenStar(filmData.rates)"
-                          :key="j">
+                        :key="j">
                     <font-awesome-icon v-if="star==='star'" icon="star" />
                     <font-awesome-icon v-if="star==='half'" icon="star-half-alt" />
                     <font-awesome-icon v-if="star==='empty'" :icon="['far', 'star']"/>
@@ -70,13 +70,21 @@
                   <router-link :to="'/series'" v-if="filmData.type === 'series'">影集</router-link>
                   <router-link :to="'/movies'" v-else-if="filmData.type === 'movies'">電影</router-link>
                 </div>
+                <div class="area" v-if="filmData.area !== ''">
+                  <b>地區：</b>
+                  <div>
+                    <span>{{filmData.area}}</span>
+                  </div>
+                </div>
                 <div class="director" v-if="filmData.type === 'movies' && filmData.director">
                   <b>導演：</b>
                   <div>
                     <span>{{filmData.director}}</span>
                   </div>
                 </div>
-                <div class="writers" v-else-if="filmData.type === 'series' && writersData.length > 0">
+                <div class="writers"
+                  v-else-if="filmData.type === 'series' && writersData.length > 0"
+                >
                   <b>編劇：</b>
                   <div>
                     <span v-for="(item, i) in writersData"
@@ -107,11 +115,11 @@
                 <div class="end" v-if="filmData.type === 'series'">
                   <span class="still" v-if="filmData.still">
                     未完結
-                    <span class="total" v-if="seasonsData.length > 0">，目前季數 <b>{{seasonsData.length}}</b> 季</span>
+                    <span class="total" v-if="filmData.seasons.length > 0">，目前季數 <b>{{filmData.seasons.length}}</b> 季</span>
                   </span>
                   <span v-else>
                     已完結
-                    <span class="total" v-if="seasonsData.length > 0">，共 <b>{{seasonsData.length}}</b> 季</span>
+                    <span class="total" v-if="filmData.seasons.length > 0">，共 <b>{{filmData.seasons.length}}</b> 季</span>
                   </span>
                 </div>
                 <div class="brief" v-if="filmData.brief">
@@ -126,7 +134,42 @@
             </div>
           </div>
         </div>
-        <div class="main_intro">
+        <div class="series_intro" v-if="filmData.type === 'series'">
+          <div class="season_tag">
+            <a
+              v-for="(item, i) in filmData.seasons"
+              :key="i" href="javascript: void(0);"
+              @click="switchSeasonHandler(`season${i+1}`)"
+              :class="{active:seasonShowTarget==`season${i+1}`}"
+            >
+              第 {{i + 1}} 季
+            </a>
+          </div>
+          <div class="seasons">
+            <div class="main_intro season"
+              v-for="(item, i) in filmData.seasons"
+              :key="i"
+              :id="`season${i+1}`"
+              :class="{active:seasonShowTarget==`season${i+1}`}"
+            >
+              <h2>第 {{i+1}} 季<span v-if="item.name"> - {{item.name}}</span></h2>
+              <div class="blocks">
+                <h3><span class="circle"></span>劇情介紹</h3>
+                <div v-if="item.sum" v-html="item.sum"></div>
+                <div v-else>
+                  <p>尚無劇情介紹</p>
+                </div>
+              </div>
+              <div class="blocks" v-show="item.trailer !== ''">
+                <h3><span class="circle"></span>預告</h3>
+                <div class="embed-responsive embed-responsive-16by9">
+                  <iframe class="embed-responsive-item" :src="`https://www.youtube.com/embed/${item.trailer}`" allowfullscreen></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="main_intro" v-else>
           <div class="blocks">
             <h3><span class="circle"></span>劇情介紹</h3>
             <div v-html="filmData.summary"></div>
@@ -175,6 +218,7 @@
     data() {
       return {
         filmData: {
+          area: "",
           brief: "",
           categories: {},
           cast: {},
@@ -200,21 +244,21 @@
         cateData: [],
         relatedData: [],
         sameDirectorData: [],
-        seasonsData: [],
         showCrown: false,
+        seasonShowTarget: "season1",
       }
     },
     computed: {
       getFilmData() {
         return this.$store.state.currentFilm //獲取電影資料
       },
-      getRelatedMData() {
-
-      }
     },
     methods: {
       rateTenStar(rates) {
         return rateTenStar(rates)
+      },
+      switchSeasonHandler(target) {
+        this.seasonShowTarget = target;
       },
     },
     created() {
@@ -232,6 +276,11 @@
           //導演資料
           if (val.writers){
             this.writersData = objToArray(val.writers)
+          }
+
+          // 地區資料
+          if (val.area) {
+            this.area = val.area;
           }
 
           //種類資料
@@ -256,9 +305,8 @@
 
           //季數
           if(val.seasons) {
-            this.seasonsData = objToArray(val.seasons)
+            this.seasons = val.seasons;
           }
-
           this.filmData = val //這頁整包電影資料
 
           const data = this.$store.state.movies;

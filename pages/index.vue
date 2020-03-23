@@ -3,6 +3,7 @@
     <BannerSlide
       :bannerData="indexBannerData"
       :paginationOn="true"
+      :isLoading="seriesIsLoading"
     />
     <IndexList
       :blockId="'series'"
@@ -11,6 +12,7 @@
       :sectionTitle="'最愛影集'"
       :subTitle="'Favorite Series'"
       :filmsData="seriesData"
+      :isLoading="seriesIsLoading"
     />
     <IndexList
       :blockId="'movies'"
@@ -19,6 +21,7 @@
       :sectionTitle="'最愛電影'"
       :subTitle="'Favorite Movies'"
       :filmsData="moviesData"
+      :isLoading="moviesIsLoading"
     />
   </div>
 </template>
@@ -34,6 +37,12 @@
       BannerSlide,
     },
     computed: {
+      moviesIsLoading() {
+        return this.$store.state.moviesIsLoading
+      },
+      seriesIsLoading() {
+        return this.$store.state.seriesIsLoading
+      },
       moviesData() {
         return this.$store.getters.filterFavoriteMovies.sort((a,b) => {
           return b.rates - a.rates;

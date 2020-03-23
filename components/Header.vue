@@ -27,6 +27,18 @@
           >
             Series
           </nuxt-link>
+          <a
+            href="javacript: void(0);"
+            @click="logout"
+            v-if="isLogin"
+          >Logout</a>
+          <b-button
+            id="show-login-btn"
+            @click="$bvModal.show('login')"
+            v-else
+          >
+            login
+          </b-button>
         </div>
         <font-awesome-icon icon="bars" ref="menuBar" />
       </div>
@@ -56,12 +68,45 @@
         </div>
       </div>
     </div>
+    <LoginModal
+      v-if="!isLogin"
+      @login_submit="(name, password) => login(name, password)"
+    />
   </header>
 </template>
 
 <script>
+  import LoginModal from '~/components/admin/LoginModal';
+  import * as firebase from 'firebase';
+
   export default {
+    components: {
+      LoginModal,
+    },
+    methods: {
+      login(name, password) {
+        firebase.auth().signInWithEmailAndPassword(name, password).then(cred => {
+          const loginUser = cred.user.email;
+          console.log(`${loginUser} is login`);
+        });
+      },
+      logout() {
+        firebase.auth().signOut().then((cred) => {
+          console.log(`Admin is logout`)
+        });
+      },
+    },
+    computed: {
+      isLogin() {
+        return this.$store.state.isLogin;
+      },
+      // loginUser() {
+      //   return this.$store.state.loginUser;
+      // }
+    },
     mounted() {
+
+      // header 滾動時 fixed
       if(document.body.clientWidth > 991) {
         document.addEventListener('scroll', () => {
           if(window.pageYOffset > 0) {
@@ -71,6 +116,8 @@
           }
         })
       }
+
+      // 手機版 menu drawer
       let mobileOn = false;
       this.$refs.menuBar.addEventListener('click', () => {
         mobileOn = !mobileOn;

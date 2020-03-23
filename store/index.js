@@ -7,26 +7,56 @@ const createStore = () => {
       movies: [],
       series: [],
       currentFilm: null,
+      allFilmsKeys: [],
+      moviesIsLoading: true,
+      seriesIsLoading: true,
+      isLogin: false,
+      loginUser: '',
     },
     mutations: { //更改狀態
       setLoadedMovies(state, payload) {
         state.movies = payload
+        state.moviesIsLoading = false
       },
       setLoadedSeries(state, payload) {
         state.series = payload
+        state.seriesIsLoading = false
       },
       setCurrentFilm(state, payload) {
         state.currentFilm = payload
       },
+      setAllFilmsKeys(state, payload) {
+        state.allFilmsKeys = payload
+      },
+      setIsLogin(state, payload) {
+        state.isLogin = payload
+      },
+      setLoginUser(state, payload) {
+        state.loginUser = payload
+      },
     },
     actions: {
+      loginState({commit}) {
+        firebase.auth().onAuthStateChanged(user => {
+          const isLogin = user ? true : false;
+          commit('setIsLogin', isLogin)
+          if (user) {
+            const email = user.email;
+            commit('setLoginUser', email)
+            console.log(`login ${isLogin}, `, `Admin is ${email}`)
+          } else {
+            commit('setLoginUser', '')
+            console.log(`login ${isLogin}, `, `Admin not login`)
+          }
+        });
+      },
       loadedMovies({commit}) {
         firebase.database().ref('movies').orderByChild('type').equalTo('movies').once('value')
           .then((data) => {
             const movies = []
             const obj = data.val()
 
-            for (let key in obj) {
+            for (let key in obj) { // key剛好等於每包電影物件的key name
               movies.push({
                 id: key,
                 area: obj[key].area,
@@ -92,8 +122,25 @@ const createStore = () => {
             commit('setCurrentFilm', film_data)
           })
       },
+      loadedAllFilmsKeys({commit}) {
+        firebase.database().ref('movies').once('value')
+          .then((data) => {
+            const filmKeys = []
+            const obj = data.val()
+
+            for (let key in obj) {
+              filmKeys.push(
+                Number(key)
+              )
+            }
+            commit('setAllFilmsKeys', filmKeys)
+          })
+      },
     },
     getters: {
+      getLoginState(state) {
+        return state.isLogin
+      },
       filterFavoriteMovies(state) {
         const filterData = state.movies.filter((o) => {
           return o.favorite === true
@@ -109,17 +156,17 @@ const createStore = () => {
       filterIndexBanner(state) {
         const filterData = state.series.filter((o) => {
           // console.log(o.index_banner)
-          return o.index_banner === true
+          return o.index_banner !== "" && o.index_banner !== undefined
         });
         const bannerArray = filterData.map((obj)=> {
-          return obj.banner
+          return obj.index_banner
         })
         return bannerArray;
       },
       moviesBanner(state) {
         const filterData = state.movies.filter((o) => {
           // console.log(o.list_banner)
-          return o.list_banner !== undefined
+          return o.list_banner !== undefined && o.list_banner !== ""
         });
         const bannerArray = filterData.map((obj)=> {
           return obj.list_banner
@@ -129,12 +176,15 @@ const createStore = () => {
       seriesBanner(state) {
         const filterData = state.series.filter((o) => {
           // console.log(o.list_banner)
-          return o.list_banner !== undefined
+          return o.list_banner !== undefined && o.list_banner !== ""
         });
         const bannerArray = filterData.map((obj)=> {
           return obj.list_banner
         })
         return bannerArray;
+      },
+      allFilmsKeys(state) {
+        return state.allFilmsKeys;
       }
     }
   })

@@ -3,6 +3,7 @@
     <BannerSlide
       :bannerData="bannerData"
       :background="true"
+      :isLoading="isLoading"
     />
     <div class="film_list">
       <div class="container">
@@ -17,8 +18,23 @@
           :filterYearMethod="filterYearMethod"
         />
         <div class="section-header">
-          <h2 v-if="$route.name === 'movies'">電影列表<span>Movies</span></h2>
-          <h2 v-else-if="$route.name === 'series'">影集列表<span>Series</span></h2>
+          <h2>
+            {{`${filmsListType}列表`}}
+            <span>{{$route.name}}</span>
+            <b-button
+              id="show-btn"
+              @click="$bvModal.show('new_film')"
+              v-if="isLogin">
+              <font-awesome-icon icon="plus-circle" />
+              {{`新增${filmsListType}`}}
+            </b-button>
+          </h2>
+        </div>
+        <div
+          class="isLoading"
+          v-show="isLoading"
+        >
+          <font-awesome-icon icon="spinner" spin/>
         </div>
         <div class="row list_content" v-if="filmsData.length > 0">
           <div class="item col-lg-4 col-sm-6"
@@ -93,19 +109,25 @@
             </nuxt-link>
           </div>
         </div>
-        <div class="row list_content" v-else>
-          <p>沒有篩選結果</p>
+        <div class="row list_content" v-else-if="filmsData.length === 0 && isLoading === false">
+          <p class="no_result">沒有篩選結果</p>
         </div>
       </div>
     </div>
+    <NewFilmModal
+      :filmsListType="filmsListType"
+      @add_film_submit="(newFilmData) => add_film(newFilmData)"
+    />
   </div>
 </template>
 
 <script>
   import { rateStarWithEmpty } from '~/plugins/helper';
   import { objToArray } from '~/plugins/helper';
+  import * as firebase from 'firebase';
   import BannerSlide from '~/components/BannerSlide';
   import FilterTools from '~/components/FilterTools';
+  import NewFilmModal from '~/components/admin/NewFilmModal';
 
   export default {
     data () {
@@ -123,19 +145,32 @@
             prevEl: '.banner .swiper-button-prev',
           },
         },
+        filmsListType: '',
         directorData: [],
         currentSelectedArea: '全部',
         currentSelectedCategory: '00',
         currentSelectedYear: '全部',
-        sortBy: 'imdbRates'
-        // filmsData: []
+        sortBy: 'imdbRates',
+        maxKey: 0,
+        nextKey: 0,
       }
     },
     components: {
       BannerSlide,
       FilterTools,
+      NewFilmModal,
+    },
+    created() {
+      this.filmsListType = this.$route.name === 'movies' ? '電影' : '影集';
+      this.$store.dispatch('loadedAllFilmsKeys');
     },
     computed: {
+      isLogin() {
+        return this.$store.state.isLogin;
+      },
+      allFilmsKeys() {
+        return this.$store.getters.allFilmsKeys
+      },
       filmsData() {
         const routeType = this.$route.name
         let data = []
@@ -154,9 +189,9 @@
         const currentSelectedCategory = this.currentSelectedCategory;
         const currentSelectedYear = this.currentSelectedYear;
 
-        if(currentSelectedArea !== '全部' && currentSelectedCategory !== '00' && currentSelectedYear !== '全部' ) {
+        if(currentSelectedArea !== '全部' && currentSelectedCategory !== '00' && currentSelectedYear !== '全部' ) { // 如果都不是選全部
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           }).filter(c => {
             const categoriesKey = Object.keys(c.categories || {})
             return categoriesKey.includes(currentSelectedCategory)
@@ -174,14 +209,14 @@
           return filteredData
         } else if (currentSelectedArea !== '全部' && currentSelectedCategory === '00' && currentSelectedYear !== '全部') {
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           }).filter(y => {
             return y.year === currentSelectedYear
           })
           return filteredData
         } else if (currentSelectedArea !== '全部' && currentSelectedCategory !== '00' && currentSelectedYear === '全部') {
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           }).filter(c => {
             const categoriesKey = Object.keys(c.categories || {})
             return categoriesKey.includes(currentSelectedCategory)
@@ -189,7 +224,7 @@
           return filteredData
         } else if (currentSelectedArea !== '全部' && currentSelectedCategory === '00' && currentSelectedYear === '全部' ) {
           const filteredData = data.filter(f => {
-            return f.area === currentSelectedArea
+            return f.area.search(currentSelectedArea) !== -1
           })
           return filteredData
         } else if (currentSelectedArea === '全部' && currentSelectedCategory !== '00' && currentSelectedYear === '全部' ) {
@@ -206,7 +241,7 @@
         } else {
           return data
         }
-
+        // console.log()
       },
       bannerData() {
         const routeType = this.$route.name
@@ -217,6 +252,22 @@
         }
         return []
       },
+      isLoading() {
+        return this.filmsListType === '電影' ? this.$store.state.moviesIsLoading : this.$store.state.seriesIsLoading
+      }
+    },
+    watch: {
+      allFilmsKeys(keys) {
+        if(keys) {
+          keys.forEach(item => {
+            this.maxKey = item > this.maxKey ? item : this.maxKey
+          });
+          this.nextKey = this.maxKey + 1;
+          if (this.nextKey < 100) {
+            this.nextKey = "0" + String(this.nextKey)
+          }
+        }
+      }
     },
     methods: {
       rateStarWithEmpty(rates) {
@@ -236,6 +287,17 @@
       filterYearMethod(key) {
         this.currentSelectedYear = key
       },
+      add_film(newFilmData) {
+        const nextKey = this.nextKey;
+        // console.log(newFilmData)
+        firebase.database().ref(`movies/${nextKey}`).set(
+          newFilmData
+        ).then(() => {
+          alert('success');
+        }).catch(() => {
+          alert('error');
+        });
+      }
       // bannerRWD() {
       //   const bannerWidth = this.$refs.bannerSlide.clientWidth;
       //   return bannerRWD(bannerWidth);
