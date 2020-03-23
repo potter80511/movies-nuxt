@@ -1,31 +1,43 @@
 <template>
   <b-modal
-    id="new_film"
-    modal-class="new_film film_form_modal"
-    :title="`新增${filmsListType}`"
-    ok-title="新增"
+    id="film_modal"
+    modal-class="film_modal film_form_modal"
+    title="編輯影片資訊"
+    ok-title="更新"
     cancel-title="取消"
-    @ok="add_film_submit"
+    @ok="update_film_submit"
   >
     <div class="container">
-      <div id="new_film_form" class="form_modal">
+      <div id="edit_film_form" class="form_modal">
         <div class="input-group">
           <label>劇名稱（原文）：</label>
-          <input id="filmName" type="text" />
+          <input id="filmName" type="text" v-model="filmData.name" />
         </div>
         <div class="input-group">
           <label>劇名稱（中文）：</label>
           <input id="filmTwName" type="text" />
         </div>
-        <div class="input-group" v-show="filmsListType === '影集'">
+        <div>{{filmData.type}}</div>
+        <div class="input-group select-tool">
+          <label>影片類型：</label>
+          <div class="area-select">
+            <select v-model="filmData.type">
+              <option value="series">影集</option>
+              <option value="movies">電影</option>
+            </select>
+            <font-awesome-icon icon="chevron-down" />
+          </div>
+        </div>
+        <div class="input-group" v-show="filmData.type === 'series'">
           <span
             :class="[endCheck ? isCheckedClass : '', 'endCheck-check label-check']"
             @click="endCheckHandler"
           >
+          <span>{{filmData.ends}}</span>
           </span>
           <label>是否完結？</label>
         </div>
-        <div class="input-group" v-show="filmsListType === '影集'">
+        <!-- <div class="input-group" v-show="filmsListType === '影集'">
           <label>首頁主圖連結：</label>
           <input id="indexBanner" type="text" />
         </div>
@@ -49,7 +61,7 @@
           <label>IMDB 評分：</label>
           <input id="filmImdbRate" type="text" />
         </div>
-        <div class="input-group film-area select-tool">
+        <div class="input-group film-area">
           <label>地區：</label>
           <div class="area-select">
             <select v-model="filmArea">
@@ -163,7 +175,7 @@
               <input id="seasonSummary" type="textarea" v-model="item.sum" />
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </b-modal>
@@ -173,15 +185,24 @@
 
 export default {
   props: {
-    filmsListType: {
-      type: String,
+    filmData: {
+      type: Object,
+      required: true,
     },
     add_film: {
       type: Function,
     },
+    endCheckDefault: {
+      type: Boolean,
+      required: true,
+    },
   },
   data () {
     return {
+      newFilmData: {
+        name: '',
+        filmArea: ''
+      },
       filmArea: '',
       favoriteCheck: false,
       endCheck: false,
@@ -276,6 +297,9 @@ export default {
       seasonsInputs: [],
     }
   },
+  mounted() {
+    this.endCheck = this.endCheckDefault;
+  },
   methods: {
     addCastHandler() {
       const castInputs = this.castInputs;
@@ -303,6 +327,8 @@ export default {
     },
     endCheckHandler() {
       this.endCheck = !this.endCheck;
+      this.filmData.ends = this.endCheck;
+      console.log(this.filmData.ends)
     },
     favoriteCheckHandler() {
       this.favoriteCheck = !this.favoriteCheck;
@@ -315,46 +341,45 @@ export default {
         }
       });
     },
-    add_film_submit() {
+    update_film_submit() {
       const {
         filmArea,
         filmsListType,
         castInputs,
         categoriesName,
         seasonsInputs,
+        filmData,
       } = this;
 
-      let name = document.getElementById("filmName").value;
-      let twName = document.getElementById("filmTwName").value;
-      const still = !this.endCheck;
-      let favorite = this.favoriteCheck;
+      console.log(filmData);
+      // let favorite = this.favoriteCheck;
 
-      let indexBannerLink = "";
-      indexBannerLink = filmsListType === '影集' ? document.getElementById("indexBanner").value : "";
-      const listBannerLink = document.getElementById("listBanner").value;
+      // let indexBannerLink = "";
+      // indexBannerLink = filmsListType === '影集' ? document.getElementById("indexBanner").value : "";
+      // const listBannerLink = document.getElementById("listBanner").value;
 
-      let related = document.getElementById("filmSeries").value;
-      let imdbRate = document.getElementById("filmImdbRate").value;
-      let brief = document.getElementById("filmBrief").value;
-      let director = document.getElementById("filmDirector").value;
+      // let related = document.getElementById("filmSeries").value;
+      // let imdbRate = document.getElementById("filmImdbRate").value;
+      // let brief = document.getElementById("filmBrief").value;
+      // let director = document.getElementById("filmDirector").value;
 
-      let castNameArray = [];
-      castInputs.forEach((item, index) => {  // 先做出[{01: a}, {02: b}]
-        let keyName = 0;
-        if (index < 9) {
-          keyName = '0' + (index + 1);
-        } else {
-          keyName = index + 1;
-        }
-        castNameArray.push({
-          [keyName]: item.castName
-        });
-      });
-      const filmCasts = castNameArray.reduce((result, item) => { // 再轉成{01:a, 02:b}
-        const key = Object.keys(item)[0]; // key name 01, 02, ...
-        result[key] = item[key];
-        return result;
-      }, {});
+      // let castNameArray = [];
+      // castInputs.forEach((item, index) => {  // 先做出[{01: a}, {02: b}]
+      //   let keyName = 0;
+      //   if (index < 9) {
+      //     keyName = '0' + (index + 1);
+      //   } else {
+      //     keyName = index + 1;
+      //   }
+      //   castNameArray.push({
+      //     [keyName]: item.castName
+      //   });
+      // });
+      // const filmCasts = castNameArray.reduce((result, item) => { // 再轉成{01:a, 02:b}
+      //   const key = Object.keys(item)[0]; // key name 01, 02, ...
+      //   result[key] = item[key];
+      //   return result;
+      // }, {});
       // result是前一個（初始為空物件{}），item是當前
       // 原本長這樣[{01: a}, {02: b}]
       // 第一次 Object.keys(item) = ['01']，所以const key = '01'
@@ -362,57 +387,36 @@ export default {
       // 第二次 Object.keys(item) = ['02']，所以const key = '02'
       // result 原本是 {'01': a,}，result['02'] = item['02']就是 b ，所以就變成{'01': a,'02': b,}
 
-      let imdbId = document.getElementById("filmImdbId").value;
-      let myRate = document.getElementById("filmMyRate").value;
+      // let imdbId = document.getElementById("filmImdbId").value;
+      // let myRate = document.getElementById("filmMyRate").value;
 
-      const summary = filmsListType === '電影' ? document.getElementById("filmSummary").value : '';
-      let trailer = document.getElementById("filmTrailer").value;
+      // const summary = filmsListType === '電影' ? document.getElementById("filmSummary").value : '';
+      // let trailer = document.getElementById("filmTrailer").value;
 
-      const type = filmsListType === '影集' ? 'series' : 'movies';
+      // const type = filmsListType === '影集' ? 'series' : 'movies';
 
-      let wallpaper = document.getElementById("filmWallpaper").value;
-      let year = document.getElementById("filmYear").value;
+      // let wallpaper = document.getElementById("filmWallpaper").value;
+      // let year = document.getElementById("filmYear").value;
 
-      const checkedCategories = categoriesName.filter(item => ( // 先篩選被勾選的
-        item.checked === true
-      )).map(item => { //再組出[{01: name1}, {02: name2}]
-        const id = item.id;
-        return {
-          [id]: item.name,
-        }
-      });
-      const filmCategories = checkedCategories.reduce((result, item) => { // 再轉成{01:name1, 02:name2}
-        const key = Object.keys(item)[0]; // key name 01, 02, ...
-        result[key] = item[key];
-        return result;
-      }, {});
+      // const checkedCategories = categoriesName.filter(item => ( // 先篩選被勾選的
+      //   item.checked === true
+      // )).map(item => { //再組出[{01: name1}, {02: name2}]
+      //   const id = item.id;
+      //   return {
+      //     [id]: item.name,
+      //   }
+      // });
+      // const filmCategories = checkedCategories.reduce((result, item) => { // 再轉成{01:name1, 02:name2}
+      //   const key = Object.keys(item)[0]; // key name 01, 02, ...
+      //   result[key] = item[key];
+      //   return result;
+      // }, {});
       // console.log(area);
 
-      const newFilmData = {
-        area: filmArea,
-        brief: brief,
-        cast: filmCasts,
-        categories: filmCategories,
-        director,
-        imdb_id: imdbId,
-        index_banner: indexBannerLink,
-        list_banner: listBannerLink,
-        name,
-        rates: Number(imdbRate),
-        related,
-        favorite,
-        seasons: seasonsInputs,
-        tw_name: twName,
-        type,
-        my_rate: Number(myRate),
-        still,
-        summary,
-        trailer,
-        wallpaper,
-        year: Number(year),
-      };
+      const newFilmData = this.filmData;
+      console.log(newFilmData)
 
-      this.$emit('add_film_submit', newFilmData);
+      // this.$emit('add_film_submit', newFilmData);
     }
   }
 }
@@ -420,4 +424,7 @@ export default {
 
 <style lang="scss" scoped>
   @import "~/assets/scss/new_film.scss";
+</style>
+<style lang="scss">
+  @import "~/assets/scss/film_modal.scss";
 </style>

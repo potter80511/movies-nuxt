@@ -1,6 +1,5 @@
-#new_film {
-  margin-top: 130px;
-  #new_film_form {
+.film_form_modal {
+  .form_modal {
     label {
       margin: 0;
     }
@@ -18,6 +17,38 @@
       margin-bottom: 10px;
       .group {
         width: 100%;
+      }
+      &.select-tool {
+        select, svg {
+          color: #888;
+        }
+        select {
+          border-radius: 0;
+          -webkit-appearance: none;
+          background: none;
+          padding: 5px 30px 0px 10px;
+          transition: none!important;
+          cursor: pointer;
+          border-color: #8a754d;
+          &:focus {
+            outline: none;
+          }
+          &:hover {
+            color: #aaa;
+            box-shadow: 0 0 8px #000;
+            border-color: #d0a554;
+            +svg {
+              color: #aaa;
+            }
+          }
+        }
+        svg {
+          position: absolute;
+          right: 10px;
+          top: 8px;
+          font-size: 14px;
+          transition: none!important;
+        }
       }
       .label-check {
         width: 22px;

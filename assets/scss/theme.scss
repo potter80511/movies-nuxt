@@ -133,6 +133,22 @@ img {
     }
   }
 }
+.film_form_modal {
+  .modal-dialog {
+    @media (min-width: 576px) {
+      max-width: 60vw;
+    }
+  }
+}
+#show-btn {
+  border-color: $confort-blue;
+  background: none;
+  text-shadow: none;
+  &:hover {
+    background: $confort-blue;
+    box-shadow: 0 0 5px #000;
+  }
+}
 .isLoading {
   width: 100%;
   z-index: 10000;

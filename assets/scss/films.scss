@@ -1,11 +1,5 @@
 @import 'color.scss';
-.new_film {
-  .modal-dialog {
-    @media (min-width: 576px) {
-      max-width: 60vw;
-    }
-  }
-}
+
 #films {
   * {transition: all .3s;}
   div, h3, h4, p, a {
@@ -23,12 +17,6 @@
         top: 50%;
         transform: translateY(-50%);
         font-size: 13px;
-        border-color: $confort-blue;
-        background: none;
-        &:hover {
-          background: $confort-blue;
-          box-shadow: 0 0 5px #000;
-        }
       }
     }
   }

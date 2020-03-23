@@ -130,6 +130,18 @@
                   <span v-if="filmData.type === 'movies'">最愛電影</span>
                   <span v-else-if="filmData.type === 'series'">最愛影集</span>
                 </div>
+                <b-button
+                  id="show-btn"
+                  @click="$bvModal.show('film_modal')"
+                  v-if="isLogin">
+                  <font-awesome-icon icon="plus-circle"
+                />
+                  編輯影片資訊
+                </b-button>
+                <FilmModal
+                  :filmData="filmData"
+                  :endCheckDefault="endCheck"
+                />
               </div>
             </div>
           </div>
@@ -209,11 +221,13 @@
   import { objToArray } from '~/plugins/helper';
   import BannerSlide from '~/components/BannerSlide';
   import RelatedFilmsSwiper from '~/components/relatedFilmSwiper/RelatedFilmsSwiper';
+  import FilmModal from '~/components/admin/FilmModal';
 
   export default {
     components: {
       BannerSlide,
       RelatedFilmsSwiper,
+      FilmModal,
     },
     data() {
       return {
@@ -246,9 +260,13 @@
         sameDirectorData: [],
         showCrown: false,
         seasonShowTarget: "season1",
+        endCheck: false,
       }
     },
     computed: {
+      isLogin() {
+        return this.$store.state.isLogin;
+      },
       getFilmData() {
         return this.$store.state.currentFilm //獲取電影資料
       },
@@ -267,6 +285,12 @@
     watch: {
       getFilmData(val) {
         if (val) {
+          // 編輯modal是否完結
+          if (val.ends) {
+            this.endCheck = val.ends
+          }
+
+
           //輪播主圖資料
           // console.log(val)
           if(val.page_banners) {
