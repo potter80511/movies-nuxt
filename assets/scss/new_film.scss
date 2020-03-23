@@ -89,17 +89,13 @@
           }
         }
       }
-      &.cast {
-        svg {
-          color: #666;
-          transition: all .3s;
-          cursor: pointer;
-          &:hover {
-            color: #aaa;
-          }
-        }
-        .group {
-          label {
+    }
+    .add_seasons_group {
+      .seasons_group {
+        .title {
+          display: flex;
+          align-items: center;
+          h3 {
             margin: 0 10px 0 0;
           }
         }

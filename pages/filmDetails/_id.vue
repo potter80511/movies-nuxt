@@ -155,7 +155,10 @@
               <h2>第 {{i+1}} 季<span v-if="item.name"> - {{item.name}}</span></h2>
               <div class="blocks">
                 <h3><span class="circle"></span>劇情介紹</h3>
-                <div v-html="item.sum"></div>
+                <div v-if="item.sum" v-html="item.sum"></div>
+                <div v-else>
+                  <p>尚無劇情介紹</p>
+                </div>
               </div>
               <div class="blocks" v-show="item.trailer !== ''">
                 <h3><span class="circle"></span>預告</h3>

@@ -33,7 +33,7 @@
           <label>列表主圖連結：</label>
           <input id="listBanner" type="text" />
         </div>
-        <div class="input-group" v-show="filmsListType === '電影'">
+        <div class="input-group">
           <label>系列：</label>
           <input id="filmSeries" type="text" />
         </div>
@@ -92,7 +92,7 @@
           <input id="filmDirector" type="text" />
         </div>
         <div class="input-group cast">
-          <div class="group">
+          <div class="add_item_btn">
             <label>演員</label>
             <font-awesome-icon icon="plus" @click="addCastHandler" />
           </div>
@@ -119,16 +119,50 @@
           <input id="filmMyRate" type="text" />
         </div>
         <div class="input-group">
-          <label>劇情大綱：</label>
-          <input id="filmSummary" type="textarea" />
-        </div>
-        <div class="input-group">
           <label>預告ID：</label>
           <input id="filmTrailer" type="text" />
         </div>
         <div class="input-group">
           <label>海報連結：</label>
           <input id="filmWallpaper" type="text" />
+        </div>
+        <div class="input-group" v-if="filmsListType === '電影'">
+          <label>劇情大綱：</label>
+          <input id="filmSummary" type="textarea" />
+        </div>
+        <div
+          v-else-if="filmsListType === '影集'"
+          class="add_seasons_group"
+        >
+          <div class="add_item_btn">
+            <label>新增季</label>
+            <font-awesome-icon icon="plus" @click="addSeasonsHandler" />
+          </div>
+          <div
+            class="seasons_group"
+            v-for="(item, i) in seasonsInputs"
+            :key="i">
+            <div class="title">
+              <h3>第 {{i+1}} 季</h3>
+              <font-awesome-icon icon="times" @click="deleteSeasonHandler(seasonsInput.id, i)" />
+            </div>
+            <div class="input-group">
+              <label>季名稱：</label>
+              <input
+                id="seasonSummary"
+                type="textarea"
+                v-model="item.name"
+              />
+            </div>
+            <div class="input-group">
+              <label>預告：</label>
+              <input id="seasonTrailer" type="text" v-model="item.trailer" />
+            </div>
+            <div class="input-group">
+              <label>劇情大綱：</label>
+              <input id="seasonSummary" type="textarea" v-model="item.sum" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -239,6 +273,7 @@ export default {
           checked: false,
         },
       ],
+      seasonsInputs: [],
     }
   },
   methods: {
@@ -247,6 +282,16 @@ export default {
       const castInputId = castInputs.length + 1;
       castInputs.push({
         id: castInputId
+      });
+    },
+    addSeasonsHandler() {
+      const seasonsInputs = this.seasonsInputs;
+      const seasonsInputId = seasonsInputs.length + 1;
+      seasonsInputs.push({
+        id: seasonsInputId,
+        name: '',
+        sum: '',
+        trailer: '',
       });
     },
     deleteCastHandler(id, inputIndex) {
@@ -276,11 +321,12 @@ export default {
         filmsListType,
         castInputs,
         categoriesName,
+        seasonsInputs,
       } = this;
 
       let name = document.getElementById("filmName").value;
       let twName = document.getElementById("filmTwName").value;
-      const stll = !this.endCheck;
+      const still = !this.endCheck;
       let favorite = this.favoriteCheck;
 
       let indexBannerLink = "";
@@ -318,7 +364,8 @@ export default {
 
       let imdbId = document.getElementById("filmImdbId").value;
       let myRate = document.getElementById("filmMyRate").value;
-      let summary = document.getElementById("filmSummary").value;
+
+      const summary = filmsListType === '電影' ? document.getElementById("filmSummary").value : '';
       let trailer = document.getElementById("filmTrailer").value;
 
       const type = filmsListType === '影集' ? 'series' : 'movies';
@@ -354,10 +401,11 @@ export default {
         rates: Number(imdbRate),
         related,
         favorite,
+        seasons: seasonsInputs,
         tw_name: twName,
         type,
         my_rate: Number(myRate),
-        stll,
+        still,
         summary,
         trailer,
         wallpaper,
