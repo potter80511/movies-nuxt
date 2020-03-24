@@ -140,7 +140,8 @@
                 </b-button>
                 <FilmModal
                   :filmData="filmData"
-                  :endCheckDefault="endCheck"
+                  :endCheck="endCheck"
+                  @endCheckHandler="(newEnds) => endCheckChange(newEnds)"
                 />
               </div>
             </div>
@@ -272,6 +273,9 @@
       },
     },
     methods: {
+      endCheckChange(newEnds) {
+        this.endCheck = newEnds;
+      },
       rateTenStar(rates) {
         return rateTenStar(rates)
       },
@@ -285,9 +289,13 @@
     watch: {
       getFilmData(val) {
         if (val) {
+          this.filmData = val //這頁整包電影資料
+
           // 編輯modal是否完結
           if (val.ends) {
             this.endCheck = val.ends
+          } else {
+            this.endCheck = false
           }
 
 
@@ -331,7 +339,6 @@
           if(val.seasons) {
             this.seasons = val.seasons;
           }
-          this.filmData = val //這頁整包電影資料
 
           const data = this.$store.state.movies;
           //相關續作資料

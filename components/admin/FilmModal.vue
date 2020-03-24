@@ -31,7 +31,7 @@
         <div class="input-group" v-show="filmData.type === 'series'">
           <span
             :class="[endCheck ? isCheckedClass : '', 'endCheck-check label-check']"
-            @click="endCheckHandler"
+            @click="endCheckHandler(filmData.ends)"
           >
           <span>{{filmData.ends}}</span>
           </span>
@@ -192,7 +192,7 @@ export default {
     add_film: {
       type: Function,
     },
-    endCheckDefault: {
+    endCheck: {
       type: Boolean,
       required: true,
     },
@@ -205,7 +205,6 @@ export default {
       },
       filmArea: '',
       favoriteCheck: false,
-      endCheck: false,
       isCheckedClass: 'is-checked',
       areaDatas: [
         '美國',
@@ -297,9 +296,6 @@ export default {
       seasonsInputs: [],
     }
   },
-  mounted() {
-    this.endCheck = this.endCheckDefault;
-  },
   methods: {
     addCastHandler() {
       const castInputs = this.castInputs;
@@ -325,10 +321,9 @@ export default {
         item.id = index + 1;
       });
     },
-    endCheckHandler() {
-      this.endCheck = !this.endCheck;
-      this.filmData.ends = this.endCheck;
-      console.log(this.filmData.ends)
+    endCheckHandler(ends) {
+      this.filmData.ends = !ends;
+      this.$emit('endCheckHandler', this.filmData.ends);
     },
     favoriteCheckHandler() {
       this.favoriteCheck = !this.favoriteCheck;
