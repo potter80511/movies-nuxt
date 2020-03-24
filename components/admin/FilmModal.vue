@@ -48,16 +48,16 @@
           </span>
           <label>是否為最愛影劇？</label>
         </div>
-        <!--
         <div class="input-group">
           <label>IMDB 評分：</label>
-          <input id="filmImdbRate" type="text" />
+          <input id="filmImdbRate" type="text" :value="filmData.rates"
+            @input="newFilmData.rates = $event.target.value"
+          />
         </div>
-        <div class="input-group film-area">
+        <div class="input-group film-area select-tool">
           <label>地區：</label>
           <div class="area-select">
-            <select v-model="filmArea">
-              <option value="" selected hidden>請選擇</option>
+            <select v-model="filmData.area">
               <option
                 v-for="(area, i) in areaDatas"
                 :value="area"
@@ -69,8 +69,9 @@
         </div>
         <div class="input-group">
           <label>年份：</label>
-          <input id="filmYear" type="text" />
+          <input id="filmYear" type="text" v-model="filmData.year" />
         </div>
+        <!--
         <div class="input-group film-categories">
           <label>電影類型：</label>
           <div class="group">
@@ -181,6 +182,10 @@ export default {
       type: Object,
       required: true,
     },
+    areaDatas: {
+      type: Array,
+      required: true,
+    },
     endCheck: {
       type: Boolean,
       required: true,
@@ -195,18 +200,10 @@ export default {
   },
   data () {
     return {
-      newFilmData: {},
-      filmArea: '',
+      newFilmData: {
+        rates: 0
+      },
       isCheckedClass: 'is-checked',
-      areaDatas: [
-        '美國',
-        '英國',
-        '韓國',
-        '泰國',
-        '日本',
-        '印度',
-        '西班牙'
-      ],
       castInputs: [],
       categoriesName: [
         {
@@ -331,16 +328,14 @@ export default {
     },
     update_film_submit() {
       const {
-        filmArea,
-        filmsListType,
         castInputs,
         categoriesName,
         seasonsInputs,
         filmData,
+        newFilmData,
       } = this;
 
       console.log(filmData);
-      // let imdbRate = document.getElementById("filmImdbRate").value;
       // let brief = document.getElementById("filmBrief").value;
       // let director = document.getElementById("filmDirector").value;
 
@@ -377,7 +372,6 @@ export default {
       // const type = filmsListType === '影集' ? 'series' : 'movies';
 
       // let wallpaper = document.getElementById("filmWallpaper").value;
-      // let year = document.getElementById("filmYear").value;
 
       // const checkedCategories = categoriesName.filter(item => ( // 先篩選被勾選的
       //   item.checked === true
@@ -393,9 +387,19 @@ export default {
       //   return result;
       // }, {});
       // console.log(area);
+      if (newFilmData.rates === 0) {
+        newFilmData.rates = filmData.rates
+      }
 
-      const newFilmData = this.filmData;
-      console.log(newFilmData)
+      const {
+        rates
+      } = newFilmData;
+
+      const updatedFilmData = {
+        ...filmData,
+        rates,
+      };
+      console.log(updatedFilmData)
 
       // this.$emit('add_film_submit', newFilmData);
     }

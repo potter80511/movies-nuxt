@@ -140,6 +140,7 @@
                 </b-button>
                 <FilmModal
                   :filmData="filmData"
+                  :areaDatas="areaDatas"
                   :endCheck="endCheck"
                   :favoriteCheck="favoriteCheck"
                   @endCheckHandler="(newEnds) => endCheckChange(newEnds)"
@@ -255,6 +256,15 @@
           wallpaper: "",
           year: 0
         },
+        areaDatas: [
+          '美國',
+          '英國',
+          '韓國',
+          '泰國',
+          '日本',
+          '印度',
+          '西班牙'
+        ],
         bannerData: [],
         writersData: [],
         castData: [],
