@@ -71,27 +71,27 @@
           <label>年份：</label>
           <input id="filmYear" type="text" v-model="filmData.year" />
         </div>
-        <!--
         <div class="input-group film-categories">
           <label>電影類型：</label>
           <div class="group">
             <div
-              v-for="(categorieName, i) in categoriesName"
+              v-for="(categoryName, i) in categoryNames"
               :key="i"
             >
               <span
-                :class="[categorieName.checked ? isCheckedClass : '', 'category-check label-check']"
-                @click="categoiesCheckedHandler(categorieName.id)"
+                :class="[categoryName.checked ? isCheckedClass : '', 'category-check label-check']"
+                @click="categoiesCheckedHandler(categoryName.id)"
               >
               </span>
-              <label>{{ categorieName.name }}</label>
+              <label>{{ categoryName.name }}</label>
             </div>
           </div>
         </div>
         <div class="input-group">
           <label>電影簡述：</label>
-          <input id="filmBrief" type="textarea" />
+          <input id="filmBrief" type="textarea" v-model="filmData.brief" />
         </div>
+        <!--
         <div class="input-group">
           <label>導演：</label>
           <input id="filmDirector" type="text" />
@@ -186,6 +186,10 @@ export default {
       type: Array,
       required: true,
     },
+    categoryNames: {
+      type: Array,
+      required: true,
+    },
     endCheck: {
       type: Boolean,
       required: true,
@@ -201,87 +205,11 @@ export default {
   data () {
     return {
       newFilmData: {
-        rates: 0
+        categories: [],
+        rates: 0,
       },
       isCheckedClass: 'is-checked',
       castInputs: [],
-      categoriesName: [
-        {
-          id: '01',
-          name: '動作',
-          checked: false,
-        },
-        {
-          id: '02',
-          name: '犯罪',
-          checked: false,
-        },
-        {
-          id: '03',
-          name: '愛情',
-          checked: false,
-        },
-        {
-          id: '04',
-          name: '科幻',
-          checked: false,
-        },
-        {
-          id: '05',
-          name: '驚悚',
-          checked: false,
-        },
-        {
-          id: '06',
-          name: '恐怖',
-          checked: false,
-        },
-        {
-          id: '07',
-          name: '劇情',
-          checked: false,
-        },
-        {
-          id: '08',
-          name: '喜劇',
-          checked: false,
-        },
-        {
-          id: '09',
-          name: '家庭',
-          checked: false,
-        },
-        {
-          id: '10',
-          name: '戰爭',
-          checked: false,
-        },
-        {
-          id: '11',
-          name: '傳記',
-          checked: false,
-        },
-        {
-          id: '12',
-          name: '動畫',
-          checked: false,
-        },
-        {
-          id: '13',
-          name: '音樂',
-          checked: false,
-        },
-        {
-          id: '14',
-          name: '奇幻',
-          checked: false,
-        },
-        {
-          id: '15',
-          name: '溫馨',
-          checked: false,
-        },
-      ],
       seasonsInputs: [],
     }
   },
@@ -319,24 +247,24 @@ export default {
       this.$emit('favoriteCheckHandler', this.filmData.favorite);
     },
     categoiesCheckedHandler(id) {
-      const categoriesName = this.categoriesName;
-      categoriesName.forEach(item => {
+      const categoryNames = this.categoryNames;
+      categoryNames.forEach(item => {
         if(item.id === id) {
           item.checked = !item.checked
         }
       });
+      this.$emit('categoiesCheckedHandler', categoryNames);
     },
     update_film_submit() {
       const {
         castInputs,
-        categoriesName,
+        categoryNames,
         seasonsInputs,
         filmData,
         newFilmData,
       } = this;
 
       console.log(filmData);
-      // let brief = document.getElementById("filmBrief").value;
       // let director = document.getElementById("filmDirector").value;
 
       // let castNameArray = [];
@@ -373,30 +301,29 @@ export default {
 
       // let wallpaper = document.getElementById("filmWallpaper").value;
 
-      // const checkedCategories = categoriesName.filter(item => ( // 先篩選被勾選的
-      //   item.checked === true
-      // )).map(item => { //再組出[{01: name1}, {02: name2}]
-      //   const id = item.id;
-      //   return {
-      //     [id]: item.name,
-      //   }
-      // });
-      // const filmCategories = checkedCategories.reduce((result, item) => { // 再轉成{01:name1, 02:name2}
-      //   const key = Object.keys(item)[0]; // key name 01, 02, ...
-      //   result[key] = item[key];
-      //   return result;
-      // }, {});
-      // console.log(area);
+      const checkedCategories = categoryNames.filter(item => (
+        item.checked === true
+      ));
+      newFilmData.categories = [...checkedCategories];
+
+      // 電影類型未改變時
+      if (newFilmData.categories.length === 0) {
+        newFilmData.categories = filmData.categories
+      }
+
+      // IMDB評分未改變時
       if (newFilmData.rates === 0) {
         newFilmData.rates = filmData.rates
       }
 
       const {
-        rates
+        categories,
+        rates,
       } = newFilmData;
 
       const updatedFilmData = {
         ...filmData,
+        categories,
         rates,
       };
       console.log(updatedFilmData)

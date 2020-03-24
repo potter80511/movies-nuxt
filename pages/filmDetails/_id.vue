@@ -141,10 +141,12 @@
                 <FilmModal
                   :filmData="filmData"
                   :areaDatas="areaDatas"
+                  :categoryNames="categoryNames"
                   :endCheck="endCheck"
                   :favoriteCheck="favoriteCheck"
                   @endCheckHandler="(newEnds) => endCheckChange(newEnds)"
                   @favoriteCheckHandler="(newFavorite) => favoriteCheckChange(newFavorite)"
+                  @categoiesCheckedHandler="(categories) => categoiesCheckChange(categories)"
                 />
               </div>
             </div>
@@ -265,6 +267,83 @@
           '印度',
           '西班牙'
         ],
+        categoryNames: [
+          {
+            id: 1,
+            name: '動作',
+            checked: false,
+          },
+          {
+            id: 2,
+            name: '犯罪',
+            checked: false,
+          },
+          {
+            id: 3,
+            name: '愛情',
+            checked: false,
+          },
+          {
+            id: 4,
+            name: '科幻',
+            checked: false,
+          },
+          {
+            id: 5,
+            name: '驚悚',
+            checked: false,
+          },
+          {
+            id: 6,
+            name: '恐怖',
+            checked: false,
+          },
+          {
+            id: 7,
+            name: '劇情',
+            checked: false,
+          },
+          {
+            id: 8,
+            name: '喜劇',
+            checked: false,
+          },
+          {
+            id: 9,
+            name: '家庭',
+            checked: false,
+          },
+          {
+            id: 10,
+            name: '戰爭',
+            checked: false,
+          },
+          {
+            id: 11,
+            name: '傳記',
+            checked: false,
+          },
+          {
+            id: 12,
+            name: '動畫',
+            checked: false,
+          },
+          {
+            id: 13,
+            name: '音樂',
+            checked: false,
+          },
+          {
+            id: 14,
+            name: '奇幻',
+            checked: false,
+          },
+          {
+            id: 15,
+            name: '溫馨',
+            checked: false,
+          },
+        ],
         bannerData: [],
         writersData: [],
         castData: [],
@@ -291,6 +370,9 @@
       },
       favoriteCheckChange(newFavorite) {
         this.favoriteCheck = newFavorite;
+      },
+      categoiesCheckChange(newCategories) {
+        this.categoryNames = newCategories
       },
       rateTenStar(rates) {
         return rateTenStar(rates)
