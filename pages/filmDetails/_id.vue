@@ -141,7 +141,9 @@
                 <FilmModal
                   :filmData="filmData"
                   :endCheck="endCheck"
+                  :favoriteCheck="favoriteCheck"
                   @endCheckHandler="(newEnds) => endCheckChange(newEnds)"
+                  @favoriteCheckHandler="(newFavorite) => favoriteCheckChange(newFavorite)"
                 />
               </div>
             </div>
@@ -262,6 +264,7 @@
         showCrown: false,
         seasonShowTarget: "season1",
         endCheck: false,
+        favoriteCheck: false,
       }
     },
     computed: {
@@ -275,6 +278,9 @@
     methods: {
       endCheckChange(newEnds) {
         this.endCheck = newEnds;
+      },
+      favoriteCheckChange(newFavorite) {
+        this.favoriteCheck = newFavorite;
       },
       rateTenStar(rates) {
         return rateTenStar(rates)
@@ -296,6 +302,13 @@
             this.endCheck = val.ends
           } else {
             this.endCheck = false
+          }
+
+          // 編輯modal是否為最愛
+          if (val.favorite) {
+            this.favoriteCheck = val.favorite
+          } else {
+            this.favoriteCheck = false
           }
 
 

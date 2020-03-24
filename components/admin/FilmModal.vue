@@ -15,9 +15,8 @@
         </div>
         <div class="input-group">
           <label>劇名稱（中文）：</label>
-          <input id="filmTwName" type="text" />
+          <input id="filmTwName" type="text" v-model="filmData.tw_name" />
         </div>
-        <div>{{filmData.type}}</div>
         <div class="input-group select-tool">
           <label>影片類型：</label>
           <div class="area-select">
@@ -37,26 +36,19 @@
           </span>
           <label>是否完結？</label>
         </div>
-        <!-- <div class="input-group" v-show="filmsListType === '影集'">
-          <label>首頁主圖連結：</label>
-          <input id="indexBanner" type="text" />
-        </div>
-        <div class="input-group">
-          <label>列表主圖連結：</label>
-          <input id="listBanner" type="text" />
-        </div>
         <div class="input-group">
           <label>系列：</label>
-          <input id="filmSeries" type="text" />
+          <input id="filmRelated" type="text" v-model="filmData.related" />
         </div>
         <div class="input-group">
           <span
             :class="[favoriteCheck ? isCheckedClass : '', 'favorite-check label-check']"
-            @click="favoriteCheckHandler"
+            @click="favoriteCheckHandler(filmData.favorite)"
           >
           </span>
           <label>是否為最愛影劇？</label>
         </div>
+        <!--
         <div class="input-group">
           <label>IMDB 評分：</label>
           <input id="filmImdbRate" type="text" />
@@ -189,22 +181,22 @@ export default {
       type: Object,
       required: true,
     },
-    add_film: {
-      type: Function,
-    },
     endCheck: {
       type: Boolean,
       required: true,
     },
+    favoriteCheck: {
+      type: Boolean,
+      required: true
+    },
+    add_film: {
+      type: Function,
+    },
   },
   data () {
     return {
-      newFilmData: {
-        name: '',
-        filmArea: ''
-      },
+      newFilmData: {},
       filmArea: '',
-      favoriteCheck: false,
       isCheckedClass: 'is-checked',
       areaDatas: [
         '美國',
@@ -325,8 +317,9 @@ export default {
       this.filmData.ends = !ends;
       this.$emit('endCheckHandler', this.filmData.ends);
     },
-    favoriteCheckHandler() {
-      this.favoriteCheck = !this.favoriteCheck;
+    favoriteCheckHandler(favorite) {
+      this.filmData.favorite = !favorite;
+      this.$emit('favoriteCheckHandler', this.filmData.favorite);
     },
     categoiesCheckedHandler(id) {
       const categoriesName = this.categoriesName;
@@ -347,13 +340,6 @@ export default {
       } = this;
 
       console.log(filmData);
-      // let favorite = this.favoriteCheck;
-
-      // let indexBannerLink = "";
-      // indexBannerLink = filmsListType === '影集' ? document.getElementById("indexBanner").value : "";
-      // const listBannerLink = document.getElementById("listBanner").value;
-
-      // let related = document.getElementById("filmSeries").value;
       // let imdbRate = document.getElementById("filmImdbRate").value;
       // let brief = document.getElementById("filmBrief").value;
       // let director = document.getElementById("filmDirector").value;
